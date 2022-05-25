@@ -5,14 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HS2CharEdit"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="HS2CharEdit" Height="450" Width="800">
     <Grid>
         <DockPanel Margin="10">
             <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,10">
                 <Button Name="btnOpenFile" Click="btnOpenFile_Click">Open file</Button>
             </WrapPanel>
-            <TextBox Name="txtEditor" />
-        </DockPanel>
 
+            <Image x:Name="showCard" Width="300" HorizontalAlignment="Left"/>
+            <TabControl Width="250" HorizontalAlignment="Left">
+                <TabItem Header="Breasts" Margin="-2,-2,-4,-4" HorizontalAlignment="Stretch">
+                    <Grid Background="#FFE5E5E5" Margin="0,0,-241,0">
+                        <Label Content="Areola Size:" HorizontalAlignment="Left" Margin="9,8,0,0" VerticalAlignment="Top"/>
+                        <TextBox 
+                            x:Name="txt_areolaSize" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="87,14,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"
+                            
+                        />
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Arms">
+                    <Grid Background="#FFE5E5E5" Margin="0,0,-271,0"/>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
     </Grid>
 </Window>
