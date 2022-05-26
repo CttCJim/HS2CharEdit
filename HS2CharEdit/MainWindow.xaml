@@ -9,29 +9,512 @@
     <Grid>
         <DockPanel Margin="10">
             <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,10">
-                <Button Name="btnOpenFile" Click="btnOpenFile_Click">Open file</Button>
+                <Button x:Name="btnOpenFile" Click="btnOpenFile_Click" Content="Open File"/>
+                <!--<Button x:Name="btnOpenFile_Copy" Click="btnOpenFile_Click" Content="Save File"/>-->
             </WrapPanel>
-
             <Image x:Name="showCard" Width="300" HorizontalAlignment="Left"/>
-            <TabControl Width="250" HorizontalAlignment="Left">
-                <TabItem Header="Breasts" Margin="-2,-2,-4,-4" HorizontalAlignment="Stretch">
-                    <Grid Background="#FFE5E5E5" Margin="0,0,-241,0">
-                        <Label Content="Areola Size:" HorizontalAlignment="Left" Margin="9,8,0,0" VerticalAlignment="Top"/>
+            <TabControl Width="450
+                        ">
+                <TabItem Header="Overall">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="22*"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="100*"/>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="292*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Height" HorizontalAlignment="Left" Margin="4,3,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
                         <TextBox 
-                            x:Name="txt_areolaSize" 
+                            x:Name="txt_ovrlHeight" 
                             IsReadOnly="True" 
                             PreviewTextInput="NumericBox" 
-                            HorizontalAlignment="Left" Height="20" Margin="87,14,0,0" 
+                            HorizontalAlignment="Left" Height="20" Margin="55,9,0,0" 
                             TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
                             MouseDoubleClick="SelectAddress"
                             GotKeyboardFocus="SelectAddress"
-                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="2" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Head Size" HorizontalAlignment="Left" Margin="4,33,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_headSize" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="55,39,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="2" Grid.ColumnSpan="2"
                             
                         />
                     </Grid>
                 </TabItem>
+                <TabItem Header="Breasts">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20.207"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="14*"/>
+                            <ColumnDefinition Width="39*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Areola Size" HorizontalAlignment="Left" Margin="35,95,0,0" VerticalAlignment="Top" Grid.Column="3"/>
+                        <TextBox 
+                            x:Name="txt_areolaSize" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="113,101,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3"
+                            
+                        />
+                        <Label Content="Softness" HorizontalAlignment="Left" Margin="35,5,0,0" VerticalAlignment="Top" Grid.Column="3"/>
+                        <TextBox 
+                            x:Name="txt_bustSoftness" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="113,11,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3"
+                            
+                        />
+                        <Label Content="Weight" HorizontalAlignment="Left" Margin="35,35,0,0" VerticalAlignment="Top" Grid.Column="3"/>
+                        <TextBox 
+                            x:Name="txt_bustWeight" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="113,41,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3"
+                            
+                        />
+                        <Label Content="Areola Depth" HorizontalAlignment="Left" Margin="35,65,0,0" VerticalAlignment="Top" Grid.Column="3"/>
+                        <TextBox 
+                            x:Name="txt_areolaDepth" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="113,71,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3"
+                            
+                        />
+                        <Label Content="Size" HorizontalAlignment="Left" Margin="4,3,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_bustSize" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="55,9,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="2" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Height" HorizontalAlignment="Left" Margin="4,33,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_bustHeight" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="55,39,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="2" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Direction" HorizontalAlignment="Left" Margin="4,63,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_bustDirection" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="55,69,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="2" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Spacing" HorizontalAlignment="Left" Margin="4,93,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_bustSpacing" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="55,99,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="2" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Angle" HorizontalAlignment="Left" Margin="3,123,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_bustAngle" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="55,129,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="2" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Length" HorizontalAlignment="Left" Margin="4,153,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_bustLength" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="55,159,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="2" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Nipple Depth" HorizontalAlignment="Left" Margin="35,153,0,0" VerticalAlignment="Top" Grid.Column="3"/>
+                        <TextBox 
+                            x:Name="txt_nippleDepth" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="113,159,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3"
+                            
+                        />
+                        <Label Content="Nipple Width" HorizontalAlignment="Left" Margin="35,123,0,0" VerticalAlignment="Top" Grid.Column="3"/>
+                        <TextBox 
+                            x:Name="txt_nippleWidth" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="113,129,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3"
+                            
+                        />
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Upper Body">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="22*"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="100*"/>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="292*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Neck Width" HorizontalAlignment="Left" Margin="4,3,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_neckWidth" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,9,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Neck Thickness" HorizontalAlignment="Left" Margin="4,33,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_neckThickness" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,39,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Shoulder Width" HorizontalAlignment="Left" Margin="4,63,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_shoulderWidth" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,69,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Shoulder Thickness" HorizontalAlignment="Left" Margin="4,93,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_shoulderThickness" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,99,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Chest Width" HorizontalAlignment="Left" Margin="4,123,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_chestWidth"
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,129,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Chest Thickness" HorizontalAlignment="Left" Margin="4,153,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_chestThickness"
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,159,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Waist Width" HorizontalAlignment="Left" Margin="4,183,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_waistWidth"
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,189,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Waist Thickness" HorizontalAlignment="Left" Margin="4,213,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_waistThickness"
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,219,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                    </Grid>
+
+                </TabItem>
+                <TabItem Header="Lower Body">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="22*"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="100*"/>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="292*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Waist Height" HorizontalAlignment="Left" Margin="4,3,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_waistHeight" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,9,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Pelvis Width" HorizontalAlignment="Left" Margin="4,33,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_pelvisWidth" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,39,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Pelvis Thickness" HorizontalAlignment="Left" Margin="4,63,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_pelvisThickness"
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,69,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Hips Width" HorizontalAlignment="Left" Margin="4,93,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_hipsWidth" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,99,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Hips Thickness" HorizontalAlignment="Left" Margin="4,123,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_hipsThickness"
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,129,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Butt Size" HorizontalAlignment="Left" Margin="4,153,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_buttSize"
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,159,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Butt Angle" HorizontalAlignment="Left" Margin="4,183,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_buttAngle"
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,189,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                    </Grid>
+
+                </TabItem>
                 <TabItem Header="Arms">
-                    <Grid Background="#FFE5E5E5" Margin="0,0,-271,0"/>
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="22*"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="100*"/>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="292*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Shoulder" HorizontalAlignment="Left" Margin="4,3,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_shoulderSize" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,9,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Upper Arms" HorizontalAlignment="Left" Margin="4,33,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_upperArms" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,39,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Forearms" HorizontalAlignment="Left" Margin="4,63,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_forearm"
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,69,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Legs">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="22*"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="100*"/>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="292*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Thighs" HorizontalAlignment="Left" Margin="4,3,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_thighs" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,9,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Legs" HorizontalAlignment="Left" Margin="4,33,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_legs" 
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,39,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Calves" HorizontalAlignment="Left" Margin="4,63,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_calves"
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,69,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+                        <Label Content="Ankles" HorizontalAlignment="Left" Margin="4,93,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.357,0.236" Grid.ColumnSpan="3"/>
+                        <TextBox 
+                            x:Name="txt_ankles"
+                            IsReadOnly="True" 
+                            PreviewTextInput="NumericBox" 
+                            HorizontalAlignment="Left" Height="20" Margin="0,99,0,0" 
+                            TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                            MouseDoubleClick="SelectAddress"
+                            GotKeyboardFocus="SelectAddress"
+                            PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="3" Grid.ColumnSpan="2"
+                            
+                        />
+
+                    </Grid>
                 </TabItem>
             </TabControl>
         </DockPanel>
