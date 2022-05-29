@@ -34,6 +34,7 @@ namespace HS2CharEdit
     {
         //globals
         Window mainWindow;
+        string VERSIONNUMBER = "0.1.1.1";
         byte[] pictobytes = Array.Empty<byte>();
         byte[] pictobytes_restore = Array.Empty<byte>();
         byte[] databytes = Array.Empty<byte>();
@@ -46,8 +47,12 @@ namespace HS2CharEdit
         static readonly string[] finders_bodypaint2 = { "sunburnColor","paintInfo","rotation" };
         static readonly string[] finders_bodypaint2a = { "sunburnColor", "paintInfo", "rotation", "layoutId" };
 
+
         //Charstat(string cname, string dstyle, string pn, int ofst, string ender="")
         readonly Charstat[] allstats = {
+        ///read Futanari
+        //c2 for no, c3 for yes
+        new Charstat("txt_futastate", "hex", "futanari", 0, "b0"),
         ///START HEAD DATA///
         //read Facial Type data
         new Charstat("txt_headContour", "hex", "headId", 0, "a6"),
@@ -439,6 +444,41 @@ namespace HS2CharEdit
             }
         }
 
+        public void Futacheck(object sender, RoutedEventArgs e)
+        {
+            if(loading) { return; } //changed during a loading event
+
+            //the futa checkbox has been changed by the user
+            bool? fchecked = chk_futastate.IsChecked;
+            if((fchecked.HasValue)&&(fchecked == true))
+            {
+                loading = true;
+                txt_futastate.Text = "c3";
+                loading = false;
+            } else {
+                loading = true;
+                txt_futastate.Text = "c2";
+                loading = false;
+            }
+        }
+
+        public void futatxtChanged(object sender, RoutedEventArgs e)
+        {
+            loading = true;
+            if(txt_futastate.Text=="c3")
+            {
+                //check box yes
+                chk_futastate.IsChecked = true;
+            } 
+            else
+            {
+                //check box no
+                chk_futastate.IsChecked = false;
+            }
+            loading = false;
+        }
+
+
         public void SaveData(byte[] contentbytes, int pos, string end = "")
         {
             //save the content into the right place in a copy of databytes
@@ -573,7 +613,7 @@ namespace HS2CharEdit
         public MainWindow()
         {
             InitializeComponent();
-            Title += Assembly.GetExecutingAssembly().GetName().Version;
+            Title += VERSIONNUMBER;
             mainWindow = this;
             /*
             byte[] x = StringToByteArray("3fab56ac");
@@ -659,7 +699,7 @@ namespace HS2CharEdit
             //separate the data from the image - this will make it easier to replace the image later
             byte[] searchfor = Encoding.ASCII.GetBytes("IEND"); //the 8 characters IEND®B`‚ represent the EOF for a PNG file. HS2/AIS data is appended after this EOF key.
             var IENDpos = Search(filebytes, searchfor); //get position of IEND
-            pictobytes_restore = pictobytes = filebytes.Skip(0).Take(IENDpos + 7).ToArray(); //get all bytes from start until IEND+7 in order to get everything including IEND®B`‚
+            pictobytes_restore = pictobytes = filebytes.Skip(0).Take(IENDpos + 8).ToArray(); //get all bytes from start until IEND+7 in order to get everything including IEND®B`‚
             databytes = filebytes.Skip(IENDpos + 8).ToArray(); //get everything from IEND+8 til the end of the file
             if(databytes.Length==0)
             {
@@ -685,6 +725,8 @@ namespace HS2CharEdit
 
         private void btnSaveFile_Click(object sender, RoutedEventArgs e)
         {
+           // byte[] filebytes = new byte[pictobytes.Length];
+           // pictobytes.CopyTo(filebytes, 0);
             byte[] filebytes = new byte[databytes.Length+pictobytes.Length];
             pictobytes.CopyTo(filebytes, 0);
             databytes.CopyTo(filebytes, pictobytes.Length);
@@ -733,7 +775,7 @@ namespace HS2CharEdit
                 //separate the data from the image - this will make it easier to replace the image later
                 byte[] searchfor = Encoding.ASCII.GetBytes("IEND"); //the 8 characters IEND®B`‚ represent the EOF for a PNG file. HS2/AIS data is appended after this EOF key.
                 var IENDpos = Search(filebytes, searchfor); //get position of IEND
-                pictobytes = filebytes.Skip(0).Take(IENDpos + 7).ToArray(); //get all bytes from start until IEND+7 in order to get everything including IEND®B`‚
+                pictobytes = filebytes.Skip(0).Take(IENDpos + 8).ToArray(); //get all bytes from start until IEND+7 in order to get everything including IEND®B`‚
                 showCard.Source = ToImage(pictobytes);
             }
         }

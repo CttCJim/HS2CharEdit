@@ -1263,6 +1263,23 @@
                                     PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="2" Grid.ColumnSpan="2"
                             
                                 />
+                            <TextBox 
+                                x:Name="txt_futastate" 
+                                Visibility="Hidden"
+                                IsReadOnly="True" TextChanged="futatxtChanged" 
+                                PreviewTextInput="NumericBox" 
+                                HorizontalAlignment="Left" Height="20" Margin="214,5,0,0" 
+                                TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                                MouseDoubleClick="SelectAddress"
+                                GotKeyboardFocus="SelectAddress"
+                                PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="4"
+                            
+                                />
+                            <CheckBox x:Name="chk_futastate" Content="Futanari"
+                                      Checked="Futacheck"
+                                      Unchecked="Futacheck"
+                                      HorizontalAlignment="Left" Margin="8,70,0,0" 
+                                      VerticalAlignment="Top" Grid.Column="2"/>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Breasts">
