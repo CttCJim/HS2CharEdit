@@ -38,15 +38,22 @@ namespace HS2CharEdit
         byte[] pictobytes_restore = Array.Empty<byte>();
         byte[] databytes = Array.Empty<byte>();
         bool loading = false;
+        //finders are arrays of strings. Before getting data, the object will find each keyword in turn and start after the last one.
+        static readonly string[] finders_facetype = { "headId" };
+        static readonly string[] finders_skintype = { "bustWeight" };
+        static readonly string[] finders_bodypaint1 = { "sunburnColor", "paintInfo" };
+        static readonly string[] finders_bodypaint1a = { "sunburnColor", "paintInfo", "layoutId" };
+        static readonly string[] finders_bodypaint2 = { "sunburnColor","paintInfo","rotation" };
+        static readonly string[] finders_bodypaint2a = { "sunburnColor", "paintInfo", "rotation", "layoutId" };
 
         //Charstat(string cname, string dstyle, string pn, int ofst, string ender="")
         readonly Charstat[] allstats = {
         ///START HEAD DATA///
         //read Facial Type data
         new Charstat("txt_headContour", "hex", "headId", 0, "a6"),
-        new Charstat("txt_headSkin", "hex", "skinId", 0, "a8"),
-        new Charstat("txt_headWrinkles", "hex", "detailId", 0, "ab"),
-        new Charstat("txt_headWrinkleIntensity", "normal", "detailPower"),
+        new Charstat("txt_headSkin", "hex", "skinId", 0, "a8", finders_facetype),
+        new Charstat("txt_headWrinkles", "hex", "detailId", 0, "ab", finders_facetype ),
+        new Charstat("txt_headWrinkleIntensity", "normal", "detailPower", 0,"", finders_facetype),
         //read Overall data
         new Charstat("txt_headWidth", "normal", "shapeValueFace", 3),
         new Charstat("txt_headUpperDepth", "normal", "shapeValueFace", 8),
@@ -99,6 +106,8 @@ namespace HS2CharEdit
         new Charstat("txt_eyeOuterHeight", "normal", "shapeValueFace", 148),
         new Charstat("txt_eyelidShape1", "normal", "shapeValueFace", 153),
         new Charstat("txt_eyelidShape2", "normal", "shapeValueFace", 158),
+        new Charstat("txt_eyeOpenMax", "normal", "eyesOpenMax"),
+        //txt_eyeOpenMax
         //read Nose data
         new Charstat("txt_noseHeight", "normal", "shapeValueFace", 163),
         new Charstat("txt_noseDepth", "normal", "shapeValueFace", 168),
@@ -172,8 +181,69 @@ namespace HS2CharEdit
         new Charstat("txt_legs", "normal", "shapeValueBody", 133),
         new Charstat("txt_calves", "normal", "shapeValueBody", 138),
         new Charstat("txt_ankles", "normal", "shapeValueBody", 143),
-
-
+        ///START SKIN DATA///
+        //read Skin Type data
+        new Charstat("txt_skinType", "hex", "skinId", 0, "a8", finders_skintype ), //start searching after bustWeight to avoid grabbing head data instead of body
+        new Charstat("txt_skinBuild", "hex", "detailId", 0, "ab",finders_skintype),
+        new Charstat("txt_skinBuildDef", "normal", "detailPower", 0, "", finders_skintype),
+        new Charstat("txt_skinRed","color","skinColor",1,"0"),
+        new Charstat("txt_skinGreen","color","skinColor",1,"1"),
+        new Charstat("txt_skinBlue","color","skinColor",1,"2"),
+        new Charstat("txt_skinShine", "normal", "skinGlossPower"),
+        new Charstat("txt_skinTexture", "normal", "skinMetallicPower"),
+        //read Suntan data
+        new Charstat("txt_tanType", "hex", "sunburnId", 0, "ac"),
+        new Charstat("txt_tanRed","color","sunburnColor",1,"0"),
+        new Charstat("txt_tanGreen","color","sunburnColor",1,"1"),
+        new Charstat("txt_tanBlue","color","sunburnColor",1,"2"),
+        new Charstat("txt_tanAlpha","color","sunburnColor",1,"3"),
+        //read Nipple Skin data
+        new Charstat("txt_nipType", "hex", "nipId", 0, "a8"),
+        new Charstat("txt_nipRed","color","nipColor",1,"0"),
+        new Charstat("txt_nipGreen","color","nipColor",1,"1"),
+        new Charstat("txt_nipBlue","color","nipColor",1,"2"),
+        new Charstat("txt_nipAlpha","color","nipColor",1,"3"),
+        new Charstat("txt_nipShine", "normal", "nipGlossPower"),
+        //read Pubic Hair data
+        new Charstat("txt_pubeType", "hex", "underhairId", 0, "ae"),
+        new Charstat("txt_pubeRed","color","underhairColor",1,"0"),
+        new Charstat("txt_pubeGreen","color","underhairColor",1,"1"),
+        new Charstat("txt_pubeBlue","color","underhairColor",1,"2"),
+        new Charstat("txt_pubeAlpha","color","underhairColor",1,"3"),
+        //read Fingernail data
+        new Charstat("txt_nailRed","color","nailColor",1,"0"),
+        new Charstat("txt_nailGreen","color","nailColor",1,"1"),
+        new Charstat("txt_nailBlue","color","nailColor",1,"2"),
+        new Charstat("txt_nailAlpha","color","nailColor",1,"3"),
+        new Charstat("txt_nailShine", "normal", "nailGlossPower"),
+        //read Body Paint 1 data
+        new Charstat("txt_paint1Type", "hex", "id", 0, "a5",finders_bodypaint1),
+        new Charstat("txt_paint1Red","color","color",1,"0",finders_bodypaint1),
+        new Charstat("txt_paint1Green","color","color",1,"1",finders_bodypaint1),
+        new Charstat("txt_paint1Blue","color","color",1,"2", finders_bodypaint1),
+        new Charstat("txt_paint1Alpha","color","color",1,"3", finders_bodypaint1),
+        new Charstat("txt_paint1Shine", "normal", "glossPower",0,"", finders_bodypaint1),
+        new Charstat("txt_paint1Texture", "normal", "metallicPower",0,"", finders_bodypaint1),
+        new Charstat("txt_paint1Position", "hex", "layoutId", 0, "a6", finders_bodypaint1),
+        new Charstat("txt_paint1Width", "normal", "layout", 1,"", finders_bodypaint1a),
+        new Charstat("txt_paint1Height", "normal", "layout", 6,"", finders_bodypaint1a),
+        new Charstat("txt_paint1PosX", "normal", "layout", 11,"", finders_bodypaint1a),
+        new Charstat("txt_paint1PosY", "normal", "layout", 16,"", finders_bodypaint1a),
+        new Charstat("txt_paint1Rotation", "normal", "rotation", 0,"", finders_bodypaint1a),
+        //read Body Paint 2 data
+        new Charstat("txt_paint2Type", "hex", "id", 0, "a5",finders_bodypaint2),
+        new Charstat("txt_paint2Red","color","color",1,"0",finders_bodypaint2),
+        new Charstat("txt_paint2Green","color","color",1,"1",finders_bodypaint2),
+        new Charstat("txt_paint2Blue","color","color",1,"2", finders_bodypaint2),
+        new Charstat("txt_paint2Alpha","color","color",1,"3", finders_bodypaint2),
+        new Charstat("txt_paint2Shine", "normal", "glossPower",0,"", finders_bodypaint2),
+        new Charstat("txt_paint2Texture", "normal", "metallicPower",0,"", finders_bodypaint2),
+        new Charstat("txt_paint2Position", "hex", "layoutId", 0, "a6", finders_bodypaint2),
+        new Charstat("txt_paint2Width", "normal", "layout", 1,"", finders_bodypaint2a),
+        new Charstat("txt_paint2Height", "normal", "layout", 6,"", finders_bodypaint2a),
+        new Charstat("txt_paint2PosX", "normal", "layout", 11,"", finders_bodypaint2a),
+        new Charstat("txt_paint2PosY", "normal", "layout", 16,"", finders_bodypaint2a),
+        new Charstat("txt_paint2Rotation", "normal", "rotation", 0,"", finders_bodypaint2a),
 
         };
 
@@ -195,20 +265,36 @@ namespace HS2CharEdit
             public int offset;
             public int pos;
             public int idx=0;
+            public string[] findfirst;
 
-            public Charstat(string cname, string dstyle, string pn, int ofst=0, string ender="")
+            public Charstat(string cname, string dstyle, string pn, int ofst = 0, string ender = "", string[]? ff = null)
             {
                 controlname = cname;
                 datastyle = dstyle;
                 propName = pn;
                 offset = ofst;
                 end = ender;
+                if(ff==null) { ff = Array.Empty<string>(); }
+                findfirst = ff;
             }
 
             public void LoadData(byte[] filebytes)
             {
                 //string to search for
                 byte[] searchfor = Encoding.ASCII.GetBytes(propName);
+
+                if(findfirst.Length>1)
+                {
+                    for(var i=0;i<findfirst.Length; i++)
+                    {
+                        //find position of the marker to start reading from
+                        byte[] marker = Encoding.ASCII.GetBytes(findfirst[i]);
+                        int starthere = Search(filebytes, marker);
+                        //look at bytes starting from there for the first instance
+                        filebytes = filebytes.Skip(starthere + findfirst[i].Length).ToArray();
+
+                    }
+                }
 
                 string hexStr = "";
                 switch (datastyle)
