@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -21,18 +22,412 @@ using Microsoft.Win32;
 using Path = System.IO.Path;
 
 
+
 namespace HS2CharEdit
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+
+
     public partial class MainWindow : Window
     {
         //globals
+        Window mainWindow;
         byte[] pictobytes = Array.Empty<byte>();
         byte[] pictobytes_restore = Array.Empty<byte>();
         byte[] databytes = Array.Empty<byte>();
+        bool loading = false;
+
+        //Charstat(string cname, string dstyle, string pn, int ofst, string ender="")
+        readonly Charstat[] allstats = {
+        ///START HEAD DATA///
+        //read Facial Type data
+        new Charstat("txt_headContour", "hex", "headId", 0, "a6"),
+        new Charstat("txt_headSkin", "hex", "skinId", 0, "a8"),
+        new Charstat("txt_headWrinkles", "hex", "detailId", 0, "ab"),
+        new Charstat("txt_headWrinkleIntensity", "normal", "detailPower"),
+        //read Overall data
+        new Charstat("txt_headWidth", "normal", "shapeValueFace", 3),
+        new Charstat("txt_headUpperDepth", "normal", "shapeValueFace", 8),
+        new Charstat("txt_headUpperHeight", "normal", "shapeValueFace", 13),
+        new Charstat("txt_headLowerDepth", "normal", "shapeValueFace", 18),
+        new Charstat("txt_headLowerWidth", "normal", "shapeValueFace", 23),
+        //read Jaw data
+        new Charstat("txt_jawWidth", "normal", "shapeValueFace", 28),
+        new Charstat("txt_jawHeight", "normal", "shapeValueFace", 33),
+        new Charstat("txt_jawDepth", "normal", "shapeValueFace", 38),
+        new Charstat("txt_jawAngle", "normal", "shapeValueFace", 43),
+        new Charstat("txt_neckDroop", "normal", "shapeValueFace", 48),
+        new Charstat("txt_chinSize", "normal", "shapeValueFace", 53),
+        new Charstat("txt_chinHeight", "normal", "shapeValueFace", 58),
+        new Charstat("txt_chinDepth", "normal", "shapeValueFace", 63),
+        //read Mole data
+        new Charstat("txt_moleID", "hex", "moleId", 0, "a9"),
+        new Charstat("txt_moleWidth", "normal", "moleLayout", 1),
+        new Charstat("txt_moleHeight", "normal", "moleLayout", 6),
+        new Charstat("txt_molePosX", "normal", "moleLayout", 11),
+        new Charstat("txt_molePosY", "normal", "moleLayout", 16),
+        new Charstat("txt_moleRed","color","moleColor",1,"0"),
+        new Charstat("txt_moleGreen","color","moleColor",1,"1"),
+        new Charstat("txt_moleBlue","color","moleColor",1,"2"),
+        new Charstat("txt_moleAlpha","color","moleColor",1,"3"),
+        //read Cheeks data
+        new Charstat("txt_cheekLowerHeight", "normal", "shapeValueFace", 68),
+        new Charstat("txt_cheekLowerDepth", "normal", "shapeValueFace", 73),
+        new Charstat("txt_cheekLowerWidth", "normal", "shapeValueFace", 78),
+        new Charstat("txt_cheekUpperHeight", "normal", "shapeValueFace", 83),
+        new Charstat("txt_cheekUpperDepth", "normal", "shapeValueFace", 88),
+        new Charstat("txt_cheekUpperWidth", "normal", "shapeValueFace", 93),
+        //read Eyebrows data
+        new Charstat("txt_browPosX", "normal", "eyebrowLayout", 1),
+        new Charstat("txt_browPosY", "normal", "eyebrowLayout", 6),
+        new Charstat("txt_browWidth", "normal", "eyebrowLayout", 11),
+        new Charstat("txt_browHeight", "normal", "eyebrowLayout", 16),
+        new Charstat("txt_browAngle", "normal", "eyebrowTilt"),
+        //read Eyes data
+        new Charstat("txt_eyeVertical", "normal", "shapeValueFace", 98),
+        new Charstat("txt_eyeSpacing", "normal", "shapeValueFace", 103),
+        new Charstat("txt_eyeDepth", "normal", "shapeValueFace", 108),
+        new Charstat("txt_eyeWidth", "normal", "shapeValueFace", 113),
+        new Charstat("txt_eyeHeight", "normal", "shapeValueFace", 118),
+        new Charstat("txt_eyeAngleZ", "normal", "shapeValueFace", 123),
+        new Charstat("txt_eyeAngleY", "normal", "shapeValueFace", 128),
+        new Charstat("txt_eyeInnerDist", "normal", "shapeValueFace", 133),
+        new Charstat("txt_eyeOuterDist", "normal", "shapeValueFace", 138),
+        new Charstat("txt_eyeInnerHeight", "normal", "shapeValueFace", 143),
+        new Charstat("txt_eyeOuterHeight", "normal", "shapeValueFace", 148),
+        new Charstat("txt_eyelidShape1", "normal", "shapeValueFace", 153),
+        new Charstat("txt_eyelidShape2", "normal", "shapeValueFace", 158),
+        //read Nose data
+        new Charstat("txt_noseHeight", "normal", "shapeValueFace", 163),
+        new Charstat("txt_noseDepth", "normal", "shapeValueFace", 168),
+        new Charstat("txt_noseAngle", "normal", "shapeValueFace", 173),
+        new Charstat("txt_noseSize", "normal", "shapeValueFace", 178),
+        new Charstat("txt_bridgeHeight", "normal", "shapeValueFace", 183),
+        new Charstat("txt_bridgeWidth", "normal", "shapeValueFace", 188),
+        new Charstat("txt_bridgeShape", "normal", "shapeValueFace", 193),
+        new Charstat("txt_nostrilWidth", "normal", "shapeValueFace", 198),
+        new Charstat("txt_nostrilHeight", "normal", "shapeValueFace", 203),
+        new Charstat("txt_nostrilLength", "normal", "shapeValueFace", 208),
+        new Charstat("txt_nostrilInnerWidth", "normal", "shapeValueFace", 213),
+        new Charstat("txt_nostrilOuterWidth", "normal", "shapeValueFace", 218),
+        new Charstat("txt_noseTipLength", "normal", "shapeValueFace", 223),
+        new Charstat("txt_noseTipHeight", "normal", "shapeValueFace", 228),
+        new Charstat("txt_noseTipSize", "normal", "shapeValueFace", 233),
+        //read Mouth data
+        new Charstat("txt_mouthHeight", "normal", "shapeValueFace", 238),
+        new Charstat("txt_mouthWidth", "normal", "shapeValueFace", 243),
+        new Charstat("txt_lipThickness", "normal", "shapeValueFace", 248),
+        new Charstat("txt_mouthDepth", "normal", "shapeValueFace", 253),
+        new Charstat("txt_upperLipThick", "normal", "shapeValueFace", 258),
+        new Charstat("txt_lowerLipThick", "normal", "shapeValueFace", 263),
+        new Charstat("txt_mouthCorners", "normal", "shapeValueFace", 268),
+        //read Ears data
+        new Charstat("txt_earSize", "normal", "shapeValueFace", 273),
+        new Charstat("txt_earAngle", "normal", "shapeValueFace", 278),
+        new Charstat("txt_earRotation", "normal", "shapeValueFace", 283),
+        new Charstat("txt_earUpShape", "normal", "shapeValueFace", 288),
+        new Charstat("txt_lowEarShape", "normal", "shapeValueFace", 293),
+        ///START BODY DATA///
+        //read Overall data
+        new Charstat("txt_ovrlHeight", "normal", "shapeValueBody", 3),
+        new Charstat("txt_headSize", "normal", "shapeValueBody", 48),
+        //read Breast data
+        new Charstat("txt_bustSize", "normal", "shapeValueBody", 8),
+        new Charstat("txt_bustHeight", "normal", "shapeValueBody", 13),
+        new Charstat("txt_bustDirection", "normal", "shapeValueBody", 18),
+        new Charstat("txt_bustSpacing", "normal", "shapeValueBody", 23),
+        new Charstat("txt_bustAngle", "normal", "shapeValueBody", 28),
+        new Charstat("txt_bustLength", "normal", "shapeValueBody", 33),
+        new Charstat("txt_areolaSize", "normal", "areolaSize"),
+        new Charstat("txt_areolaDepth", "normal", "shapeValueBody", 38),
+        new Charstat("txt_bustSoftness", "normal", "bustSoftness"),
+        new Charstat("txt_bustWeight", "normal", "bustWeight"),
+        new Charstat("txt_nippleWidth", "normal", "shapeValueBody", 43),
+        new Charstat("txt_nippleDepth", "normal", "bustSoftness", -18),
+        //read Upper Body data
+        new Charstat("txt_neckWidth", "normal", "shapeValueBody", 53),
+        new Charstat("txt_neckThickness", "normal", "shapeValueBody", 58),
+        new Charstat("txt_shoulderWidth", "normal", "shapeValueBody", 63),
+        new Charstat("txt_shoulderThickness", "normal", "shapeValueBody", 68),
+        new Charstat("txt_chestWidth", "normal", "shapeValueBody", 73),
+        new Charstat("txt_chestThickness", "normal", "shapeValueBody", 78),
+        new Charstat("txt_waistWidth", "normal", "shapeValueBody", 83),
+        new Charstat("txt_waistThickness", "normal", "shapeValueBody", 88),
+        //read Lower body data
+        new Charstat("txt_waistHeight", "normal", "shapeValueBody", 93),
+        new Charstat("txt_pelvisWidth", "normal", "shapeValueBody", 98),
+        new Charstat("txt_pelvisThickness", "normal", "shapeValueBody", 103),
+        new Charstat("txt_hipsWidth", "normal", "shapeValueBody", 108),
+        new Charstat("txt_hipsThickness", "normal", "shapeValueBody", 113),
+        new Charstat("txt_buttSize", "normal", "shapeValueBody", 118),
+        new Charstat("txt_buttAngle", "normal", "shapeValueBody", 123),
+        //read Arms data
+        new Charstat("txt_shoulderSize", "normal", "shapeValueBody", 148),
+        new Charstat("txt_upperArms", "normal", "shapeValueBody", 153),
+        new Charstat("txt_forearm", "normal", "shapeValueBody", 158),
+        //read Legs data
+        new Charstat("txt_thighs", "normal", "shapeValueBody", 128),
+        new Charstat("txt_legs", "normal", "shapeValueBody", 133),
+        new Charstat("txt_calves", "normal", "shapeValueBody", 138),
+        new Charstat("txt_ankles", "normal", "shapeValueBody", 143),
+
+
+
+        };
+
         bool cardchanged = false;
+
+        //property array
+        public class Charstat
+        {
+            public string displayval="";
+            public string controlname="";
+            public string propName; //name of string to start from when locating the data
+            public string datastyle= "";
+            public string end = "";
+            //used to store terminator chars for hex vars, and color sequence IDs for colors.
+            //datastyle values:
+            //"hex": variable-length hex values loaded from a starting position to a terminating hex byte, displayed as a raw hex string
+            //"color": 4x4-byte RGBa values read as a batch from a starting position. R,G,B are x255 to get ingame values; Alpha value is x100. Numbers must be rounded down.
+            //"normal": 4-byte hex values loaded from a starting position, x100 and rounded to nearest int to get in-game value.
+            public int offset;
+            public int pos;
+            public int idx=0;
+
+            public Charstat(string cname, string dstyle, string pn, int ofst=0, string ender="")
+            {
+                controlname = cname;
+                datastyle = dstyle;
+                propName = pn;
+                offset = ofst;
+                end = ender;
+            }
+
+            public void LoadData(byte[] filebytes)
+            {
+                //string to search for
+                byte[] searchfor = Encoding.ASCII.GetBytes(propName);
+
+                string hexStr = "";
+                switch (datastyle)
+                {
+                    case "hex":
+                        {
+                            pos = Search(filebytes, searchfor) + propName.Length + offset;
+
+                            string curstring = "";
+                            byte[] current;
+
+                            while (curstring != end.ToLower())
+                            {
+                                current = filebytes.Skip(pos).Take(1).ToArray();
+                                curstring = BitConverter.ToString(current).ToLower();
+                                if (curstring != end.ToLower())
+                                {
+                                    hexStr += curstring;
+                                    pos++;
+                                }
+                                else
+                                {
+                                    displayval = hexStr;
+                                    break;
+                                   // return hexStr;
+                                }
+                            }
+                            break;
+                        }
+                    case "color":
+                        {
+                            float gameval;
+                            idx = Int32.Parse(end);
+                     
+                            //find position of the stat in question
+                            pos = Search(filebytes, searchfor) + propName.Length + offset + 1 + (idx * 5); //+1 for the delimiter character; +5 to get to the next color value
+
+                            //get bytes[] at position
+                            var hexNum = filebytes.Skip(pos).Take(4).ToArray();
+
+                            // Hexadecimal Representation of number
+                            hexStr = BitConverter.ToString(hexNum);
+                            hexStr = hexStr.Replace("-", "");
+
+                            // Converting to integer
+                            Int32 IntRep = Int32.Parse(hexStr, NumberStyles.AllowHexSpecifier);
+                            // Integer to Byte[] and presenting it for float conversion
+                            float f = BitConverter.ToSingle(BitConverter.GetBytes(IntRep), 0);
+
+                            //multiply by 255 or 100 to get the int value ingame
+                            if (idx < 3)
+                            {
+                                f = (float)Math.Floor(f*255); //colors are RGB 0-255
+                            }
+                            else
+                            {
+                                f = (float)Math.Floor(f * 100); //alpha is 0-100
+                            }
+
+                            gameval = f;
+
+                            displayval = gameval.ToString();
+                        }
+
+                        break;
+                    case "normal":
+                        {
+                            //find position of the stat in question
+                            pos = Search(filebytes, searchfor) + propName.Length + offset + 1; //+1 for the delimiter character
+
+                            //get bytes[] at position
+                            var hexNum = filebytes.Skip(pos).Take(4).ToArray();
+
+                            // Hexadecimal Representation of number
+                            hexStr = BitConverter.ToString(hexNum).Replace("-", "");
+
+                            // Converting to integer
+                            Int32 IntRep = Int32.Parse(hexStr, NumberStyles.AllowHexSpecifier);
+                            // Integer to Byte[] and presenting it for float conversion
+                            float f = BitConverter.ToSingle(BitConverter.GetBytes(IntRep), 0);
+
+                            //multiply by 100 to get the int value ingame
+                            f *= 100;
+                            int gameval = (int)Math.Round(f);
+
+                            displayval = gameval.ToString();
+                            break;
+                        }
+                }
+
+                //put the new value in the text box
+                ((MainWindow)Application.Current.MainWindow).fillBox(controlname, displayval); //leave last argument empty to set ReadOnly false
+            }
+
+            public void Update(string contents)
+            {
+                //convert data to bytes and call public function to save it to the active memory copy of the card data
+
+                //1 - convert content string to hex string
+                byte[] content = Array.Empty<byte>();
+                displayval = contents;
+
+                switch (datastyle)
+                {
+                    case "hex":
+                        {
+                            //convert display value directly to bytes
+                            content = StringToByteArray(displayval);
+                            break;
+                        }
+                    case "color":
+                        {
+                            float f;
+                            //divide by 255 or 100 to get the int value ingame
+                            if (idx < 3)
+                            {
+                                //colors are RGB 0-255
+                                f = float.Parse(displayval) / 255;
+                            }
+                            else
+                            {
+                                //alpha is 0-100
+                                f = float.Parse(displayval) / 100;
+                            }
+                            content = ((MainWindow)Application.Current.MainWindow).FloatToHex(f);
+                            break;
+                        }
+                    case "normal":
+                        {
+                            //convert back into float decimal ("71"->0.71)
+                            float x = float.Parse(displayval) / 100;
+                            //convert to byte array
+                            content = ((MainWindow)Application.Current.MainWindow).FloatToHex(x);
+                            
+                            break;
+                        }
+                }
+
+                //2 - call external func to save the data
+                ((MainWindow)Application.Current.MainWindow).SaveData(content, pos, end);
+
+            }
+        }
+
+        public void SaveData(byte[] contentbytes, int pos, string end = "")
+        {
+            //save the content into the right place in a copy of databytes
+            //using a copy here in case the array size changes
+            byte[] before;
+            byte[] after;
+            int contentlength;
+            if (end=="")
+            {
+                contentlength = contentbytes.Length;
+            }
+            else
+            {
+                //variable length; need to find out how long the original data was
+                string curstring = "";
+                byte[] current;
+                int postemp = pos;
+
+                while (curstring != end.ToLower())
+                {
+                    current = databytes.Skip(postemp).Take(1).ToArray();
+                    curstring = BitConverter.ToString(current).ToLower();
+                    if (curstring != end.ToLower())
+                    {
+                        postemp++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                contentlength = postemp - pos;
+            }
+
+            //get bytes before and after the data
+            before = databytes.Take(pos).ToArray();
+            after = databytes.Skip(pos + contentlength).ToArray();
+            
+            byte[] combined = new byte[before.Length+ contentbytes.Length + after.Length];
+            
+
+            before.CopyTo(combined, 0);
+            contentbytes.CopyTo(combined, pos);
+            after.CopyTo(combined,pos+contentbytes.Length); //using length of new content
+
+            //overwrite databytes with the new array
+            databytes = combined;
+
+            for (var i = 0; i < allstats.Length; i++)
+            {
+                allstats[i].LoadData(databytes);
+            }
+
+        }
+        
+        public static byte[] StringToByteArray(string hex)
+        {
+            return Enumerable.Range(0, hex.Length / 2).Select(x => Convert.ToByte(hex.Substring(x * 2, 2), 16)).ToArray();
+        }
+        
+        private void statChanged(object sender, TextChangedEventArgs args)
+        {
+            if(loading) { return; } //don't take action while loading a card!
+            string boxname = ((TextBox)sender).Name;
+            string data = ((TextBox)sender).Text;
+            //find the object for this box and save changes to the copy in memory
+            for (var i = 0; i < allstats.Length; i++)
+            {
+                if (allstats[i].controlname==boxname)
+                {
+                    allstats[i].Update(data);
+                    break;
+                }
+            }
+        }
 
         private void NumericBox(object sender, TextCompositionEventArgs e)
         {
@@ -89,126 +484,49 @@ namespace HS2CharEdit
             return -1;
         }
 
-        int getStat(string propName, byte[] filebytes, int offset = 0, int len = 4)
-            //offset is for when data is unlabeled and we have to go into the data from a known point forward (or backward)
-            //len is for if a variable is more than 4 bytes
-        {
-            byte[] searchfor = Encoding.ASCII.GetBytes(propName);
-
-            //find position of the stat in question
-            var pos = Search(filebytes, searchfor) + propName.Length + offset + 1; //+1 for the delimiter character
-
-            //get bytes[] at position
-            var hexNum = filebytes.Skip(pos).Take(len).ToArray();
-
-            // Hexadecimal Representation of number
-            string hexStr = BitConverter.ToString(hexNum);
-            hexStr = hexStr.Replace("-", "");
-
-            // Converting to integer
-            Int32 IntRep = Int32.Parse(hexStr, NumberStyles.AllowHexSpecifier);
-            // Integer to Byte[] and presenting it for float conversion
-            float f = BitConverter.ToSingle(BitConverter.GetBytes(IntRep), 0);
-
-            //multiply by 100 to get the int value ingame
-            f *= 100;
-            int gameval = (int)Math.Round(f);
-
-            return gameval;
-        }
-
-        string getStatHex2(string propName, byte[] filebytes, string end, int offset = 0)
-        {
-            byte[] searchfor = Encoding.ASCII.GetBytes(propName);
-
-            //find position of the stat in question
-            var pos = Search(filebytes, searchfor) + propName.Length + offset;
-
-            byte[] current;
-            string curstring = "";
-            string hexStr = "";
-
-            while(curstring!=end)
-            {
-                current = filebytes.Skip(pos).Take(1).ToArray();
-                curstring = BitConverter.ToString(current).ToLower();
-                if(curstring!=end.ToLower())
-                {
-                    hexStr += curstring;
-                    pos++;
-                } else
-                {
-                    return hexStr;
-                }
-            }
-
-            return hexStr;
-        }
-
-        string getStatHex(string propName, byte[] filebytes, int offset = 0, int len = 1)
-        {
-            byte[] searchfor = Encoding.ASCII.GetBytes(propName);
-
-            //find position of the stat in question
-            var pos = Search(filebytes, searchfor) + propName.Length + offset + 1; //+1 for the delimiter character
-
-            //get bytes[] at position
-            var hexNum = filebytes.Skip(pos).Take(len).ToArray();
-
-            // Hexadecimal Representation of number
-            string hexStr = BitConverter.ToString(hexNum);
-
-            return hexStr;
-        }
-
-        float[] getStatColor(string propName, byte[] filebytes, int offset = 0)
-        {
-            //offset is for when data is unlabeled and we have to go into the data from a known point forward (or backward)
-            //colors are stored as rrrr_gggg_bbbb_aaaa where a is alpha value
-            //should return an array of [R,G,B,A]
-            float[] gameval = {0,0,0,0};
-            byte[] searchfor = Encoding.ASCII.GetBytes(propName);
-
-            for (var i = 0; i < 4; i++)
-            {
-                //find position of the stat in question
-                var pos = Search(filebytes, searchfor) + propName.Length + offset + 1 + (i * 5); //+1 for the delimiter character; +5 to get to the next color value
-
-                //get bytes[] at position
-                var hexNum = filebytes.Skip(pos).Take(4).ToArray();
-
-                // Hexadecimal Representation of number
-                string hexStr = BitConverter.ToString(hexNum);
-                hexStr = hexStr.Replace("-", "");
-
-                // Converting to integer
-                Int32 IntRep = Int32.Parse(hexStr, NumberStyles.AllowHexSpecifier);
-                // Integer to Byte[] and presenting it for float conversion
-                float f = BitConverter.ToSingle(BitConverter.GetBytes(IntRep), 0);
-
-                //multiply by 255 or 100 to get the int value ingame
-                if(i<3)
-                {
-                    f *= 255; //colors are RGB 0-255
-                } else
-                {
-                    f *= 100; //alpha is 0-100
-                }
-
-                //gameval[i] = (int)Math.Round(f);
-                gameval[i] = f;
-
-            }
-
-            return gameval;
-        }
-
         public MainWindow()
         {
             InitializeComponent();
-            this.Title += Assembly.GetExecutingAssembly().GetName().Version;
+            Title += Assembly.GetExecutingAssembly().GetName().Version;
+            mainWindow = this;
+            /*
+            byte[] x = StringToByteArray("3fab56ac");
+            string test = BitConverter.ToString(x);
+            MessageBox.Show("3fab56ac" + " : " + test);
+            */
+            /*
+            float x = float.Parse("67") / 100;
+            byte[] lVal = BitConverter.GetBytes(x);
+            Array.Reverse(lVal);
+            string test = BitConverter.ToString(lVal);
+            MessageBox.Show(test + " : " + x.ToString());
+            */
         }
 
+        public byte[] FloatToHex(float f)
+        {
+            byte[] hexes = BitConverter.GetBytes(f);
+            Array.Reverse(hexes);
+            return hexes;
+        }
+
+        private void WinLoaded(object sender, RoutedEventArgs e)
+        {
+            
+
+        }
+
+        public void fillBox(string boxname, string content, bool ro = false)
+        {
+            loading = true;
+            TextBox? textBox = this.FindName(boxname) as TextBox;
+            if (textBox != null)
+            {
+                textBox.Text = content;
+                textBox.IsReadOnly = ro;
+            }
+            loading = false;
+        }
 
         private void btnOpenFile_Click(object sender, RoutedEventArgs e)
         {
@@ -216,11 +534,11 @@ namespace HS2CharEdit
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "png files (*.png)|*.png";
             if (openFileDialog.ShowDialog() == true) {
-                loadCard(openFileDialog.FileName);
+                LoadCard(openFileDialog.FileName);
             }
         }
 
-        private void dropCard(object sender, DragEventArgs e)
+        private void DropCard(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -230,19 +548,25 @@ namespace HS2CharEdit
                 // Assuming you have one file that you care about, pass it off to whatever
                 // handling code you have defined.
                 var file = files[0];
-                loadCard(file);
+                LoadCard(file);
             }
         }
 
-        private void loadCard(string cardfile)
+        private void LoadCard(string cardfile)
         {
+            
             if(cardchanged)
             {
-                MessageBoxResult result = MessageBox.Show("You have unsaved changes! Load a new card?",
+                MessageBoxResult result = MessageBox.Show(this,"You have unsaved changes! Load a new card?",
                                           "Confirmation",
                                           MessageBoxButton.YesNo,
                                           MessageBoxImage.Question);
+                if(result== MessageBoxResult.No)
+                {
+                    return;
+                }
             }
+
 
             byte[] filebytes = File.ReadAllBytes(cardfile);
 
@@ -250,279 +574,20 @@ namespace HS2CharEdit
             byte[] searchfor = Encoding.ASCII.GetBytes("IEND"); //the 8 characters IEND®B`‚ represent the EOF for a PNG file. HS2/AIS data is appended after this EOF key.
             var IENDpos = Search(filebytes, searchfor); //get position of IEND
             pictobytes_restore = pictobytes = filebytes.Skip(0).Take(IENDpos + 7).ToArray(); //get all bytes from start until IEND+7 in order to get everything including IEND®B`‚
-            databytes = filebytes.Skip(IENDpos + 8).Take(filebytes.Length - pictobytes.Length).ToArray(); //get everything from IEND+8 til the end of the file
+            databytes = filebytes.Skip(IENDpos + 8).ToArray(); //get everything from IEND+8 til the end of the file
+            if(databytes.Length==0)
+            {
+                MessageBox.Show("The PNG you selected has no card data", "Card Read Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
-            ///START HEAD DATA///
-            //read Facial Type data
-            txt_headContour.Text = getStatHex2("headId", databytes, "a6").ToString();
-            txt_headContour.IsReadOnly = false;
-            txt_headSkin.Text = getStatHex2("skinId", databytes, "a8").ToString();
-            txt_headSkin.IsReadOnly = false;
-            txt_headWrinkles.Text = getStatHex2("detailId", databytes, "ab").ToString();
-            txt_headWrinkles.IsReadOnly = false;
-            txt_headWrinkleIntensity.Text = getStat("detailPower", databytes).ToString();
-            txt_headWrinkleIntensity.IsReadOnly = false;
-
-            //read Overall data
-            txt_headWidth.Text = getStat("shapeValueFace", databytes, 3).ToString();
-            txt_headWidth.IsReadOnly = false;
-            txt_headUpperDepth.Text = getStat("shapeValueFace", databytes, 8).ToString();
-            txt_headUpperDepth.IsReadOnly = false;
-            txt_headUpperHeight.Text = getStat("shapeValueFace", databytes, 13).ToString();
-            txt_headUpperHeight.IsReadOnly = false;
-            txt_headLowerDepth.Text = getStat("shapeValueFace", databytes, 18).ToString();
-            txt_headLowerDepth.IsReadOnly = false;
-            txt_headLowerWidth.Text = getStat("shapeValueFace", databytes, 23).ToString();
-            txt_headLowerWidth.IsReadOnly = false;
-
-            //read Jaw data
-            txt_jawWidth.Text = getStat("shapeValueFace", databytes, 28).ToString();
-            txt_jawWidth.IsReadOnly = false;
-            txt_jawHeight.Text = getStat("shapeValueFace", databytes, 33).ToString();
-            txt_jawHeight.IsReadOnly = false;
-            txt_jawDepth.Text = getStat("shapeValueFace", databytes, 38).ToString();
-            txt_jawDepth.IsReadOnly = false;
-            txt_jawAngle.Text = getStat("shapeValueFace", databytes, 43).ToString();
-            txt_jawAngle.IsReadOnly = false;
-            txt_neckDroop.Text = getStat("shapeValueFace", databytes, 48).ToString();
-            txt_neckDroop.IsReadOnly = false;
-            txt_chinSize.Text = getStat("shapeValueFace", databytes, 53).ToString();
-            txt_chinSize.IsReadOnly = false;
-            txt_chinHeight.Text = getStat("shapeValueFace", databytes, 58).ToString();
-            txt_chinHeight.IsReadOnly = false;
-            txt_chinDepth.Text = getStat("shapeValueFace", databytes, 63).ToString();
-            txt_chinDepth.IsReadOnly = false;
-
-            //read Cheeks data
-            txt_cheekLowerHeight.Text = getStat("shapeValueFace", databytes, 68).ToString();
-            txt_cheekLowerHeight.IsReadOnly = false;
-            txt_cheekLowerDepth.Text = getStat("shapeValueFace", databytes, 73).ToString();
-            txt_cheekLowerDepth.IsReadOnly = false;
-            txt_cheekLowerWidth.Text = getStat("shapeValueFace", databytes, 78).ToString();
-            txt_cheekLowerWidth.IsReadOnly = false;
-            txt_cheekUpperHeight.Text = getStat("shapeValueFace", databytes, 83).ToString();
-            txt_cheekUpperHeight.IsReadOnly = false;
-            txt_cheekUpperDepth.Text = getStat("shapeValueFace", databytes, 88).ToString();
-            txt_cheekUpperDepth.IsReadOnly = false;
-            txt_cheekUpperWidth.Text = getStat("shapeValueFace", databytes, 93).ToString();
-            txt_cheekUpperWidth.IsReadOnly = false;
-
-            //read Eyebrows data
-            txt_browWidth.Text = getStat("eyebrowLayout", databytes, 11).ToString();
-            txt_browWidth.IsReadOnly = false;
-            txt_browHeight.Text = getStat("eyebrowLayout", databytes, 16).ToString();
-            txt_browHeight.IsReadOnly = false;
-            txt_browPosX.Text = getStat("eyebrowLayout", databytes, 1).ToString();
-            txt_browPosX.IsReadOnly = false;
-            txt_browPosY.Text = getStat("eyebrowLayout", databytes, 6).ToString();
-            txt_browPosY.IsReadOnly = false;
-            txt_browAngle.Text = getStat("eyebrowTilt", databytes).ToString();
-            txt_browAngle.IsReadOnly = false;
-
-            //read Eyes data
-            txt_eyeVertical.Text = getStat("shapeValueFace", databytes, 98).ToString();
-            txt_eyeVertical.IsReadOnly = false;
-            txt_eyeSpacing.Text = getStat("shapeValueFace", databytes, 103).ToString();
-            txt_eyeSpacing.IsReadOnly = false;
-            txt_eyeDepth.Text = getStat("shapeValueFace", databytes, 108).ToString();
-            txt_eyeDepth.IsReadOnly = false;
-            txt_eyeWidth.Text = getStat("shapeValueFace", databytes, 113).ToString();
-            txt_eyeWidth.IsReadOnly = false;
-            txt_eyeHeight.Text = getStat("shapeValueFace", databytes, 118).ToString();
-            txt_eyeHeight.IsReadOnly = false;
-            txt_eyeAngleZ.Text = getStat("shapeValueFace", databytes, 123).ToString();
-            txt_eyeAngleZ.IsReadOnly = false;
-            txt_eyeAngleY.Text = getStat("shapeValueFace", databytes, 128).ToString();
-            txt_eyeAngleY.IsReadOnly = false;
-            txt_eyeInnerDist.Text = getStat("shapeValueFace", databytes, 133).ToString();
-            txt_eyeInnerDist.IsReadOnly = false;
-            txt_eyeOuterDist.Text = getStat("shapeValueFace", databytes, 138).ToString();
-            txt_eyeOuterDist.IsReadOnly = false;
-            txt_eyeInnerHeight.Text = getStat("shapeValueFace", databytes, 143).ToString();
-            txt_eyeInnerHeight.IsReadOnly = false;
-            txt_eyeOuterHeight.Text = getStat("shapeValueFace", databytes, 148).ToString();
-            txt_eyeOuterHeight.IsReadOnly = false;
-            txt_eyelidShape1.Text = getStat("shapeValueFace", databytes, 153).ToString();
-            txt_eyelidShape1.IsReadOnly = false;
-            txt_eyelidShape2.Text = getStat("shapeValueFace", databytes, 158).ToString();
-            txt_eyelidShape2.IsReadOnly = false;
-            //txt_eyeOpenMax.Text = getStat("shapeValueFace", databytes, 163).ToString(); //wrong index - likely nose height
-            //txt_eyeOpenMax.IsReadOnly = false;
-
-            //read Nose data
-            txt_noseHeight.Text = getStat("shapeValueFace", databytes, 163).ToString();
-            txt_noseHeight.IsReadOnly = false;
-            txt_noseDepth.Text = getStat("shapeValueFace", databytes, 168).ToString();
-            txt_noseDepth.IsReadOnly = false;
-            txt_noseAngle.Text = getStat("shapeValueFace", databytes, 173).ToString();
-            txt_noseAngle.IsReadOnly = false;
-            txt_noseSize.Text = getStat("shapeValueFace", databytes, 178).ToString();
-            txt_noseSize.IsReadOnly = false;
-
-            txt_bridgeHeight.Text = getStat("shapeValueFace", databytes, 183).ToString();
-            txt_bridgeHeight.IsReadOnly = false;
-            txt_bridgeWidth.Text = getStat("shapeValueFace", databytes, 188).ToString();
-            txt_bridgeWidth.IsReadOnly = false;
-            txt_bridgeShape.Text = getStat("shapeValueFace", databytes, 193).ToString();
-            txt_bridgeShape.IsReadOnly = false;
-
-            txt_nostrilWidth.Text = getStat("shapeValueFace", databytes, 198).ToString();
-            txt_nostrilWidth.IsReadOnly = false;
-            txt_nostrilHeight.Text = getStat("shapeValueFace", databytes, 203).ToString();
-            txt_nostrilHeight.IsReadOnly = false;
-            txt_nostrilLength.Text = getStat("shapeValueFace", databytes, 208).ToString();
-            txt_nostrilLength.IsReadOnly = false;
-            txt_nostrilInnerWidth.Text = getStat("shapeValueFace", databytes, 213).ToString();
-            txt_nostrilInnerWidth.IsReadOnly = false;
-            txt_nostrilOuterWidth.Text = getStat("shapeValueFace", databytes, 218).ToString();
-            txt_nostrilOuterWidth.IsReadOnly = false;
-
-            txt_noseTipLength.Text = getStat("shapeValueFace", databytes, 223).ToString();
-            txt_noseTipLength.IsReadOnly = false;
-            txt_noseTipHeight.Text = getStat("shapeValueFace", databytes, 228).ToString();
-            txt_noseTipHeight.IsReadOnly = false;
-            txt_noseTipSize.Text = getStat("shapeValueFace", databytes, 233).ToString();
-            txt_noseTipSize.IsReadOnly = false;
-
-            //read Mouth data
-            txt_mouthHeight.Text = getStat("shapeValueFace", databytes, 238).ToString();
-            txt_mouthHeight.IsReadOnly = false;
-            txt_mouthWidth.Text = getStat("shapeValueFace", databytes, 243).ToString();
-            txt_mouthWidth.IsReadOnly = false;
-            txt_lipThickness.Text = getStat("shapeValueFace", databytes, 248).ToString();
-            txt_lipThickness.IsReadOnly = false;
-            txt_mouthDepth.Text = getStat("shapeValueFace", databytes, 253).ToString();
-            txt_mouthDepth.IsReadOnly = false;
-            txt_upperLipThick.Text = getStat("shapeValueFace", databytes, 258).ToString();
-            txt_upperLipThick.IsReadOnly = false;
-            txt_lowerLipThick.Text = getStat("shapeValueFace", databytes, 263).ToString();
-            txt_lowerLipThick.IsReadOnly = false;
-            txt_mouthCorners.Text = getStat("shapeValueFace", databytes, 268).ToString();
-            txt_mouthCorners.IsReadOnly = false;
-
-            //read Ears data
-            txt_earSize.Text = getStat("shapeValueFace", databytes, 273).ToString();
-            txt_earSize.IsReadOnly = false;
-            txt_earAngle.Text = getStat("shapeValueFace", databytes, 278).ToString();
-            txt_earAngle.IsReadOnly = false;
-            txt_earRotation.Text = getStat("shapeValueFace", databytes, 283).ToString();
-            txt_earRotation.IsReadOnly = false;
-            txt_earUpShape.Text = getStat("shapeValueFace", databytes, 288).ToString();
-            txt_earUpShape.IsReadOnly = false;
-            txt_lowEarShape.Text = getStat("shapeValueFace", databytes, 293).ToString();
-            txt_lowEarShape.IsReadOnly = false;
-
-            //read Mole data
-            txt_moleID.Text = getStatHex2("moleId", databytes,"a9").ToString();
-            txt_moleID.IsReadOnly = false;
-            txt_moleWidth.Text = getStat("moleLayout", databytes, 1).ToString();
-            txt_moleWidth.IsReadOnly = false;
-            txt_moleHeight.Text = getStat("moleLayout", databytes, 6).ToString();
-            txt_moleHeight.IsReadOnly = false;
-            txt_molePosX.Text = getStat("moleLayout", databytes, 11).ToString();
-            txt_molePosX.IsReadOnly = false;
-            txt_molePosY.Text = getStat("moleLayout", databytes, 16).ToString();
-            txt_molePosY.IsReadOnly = false;
-
-            float[] moleColors = getStatColor("moleColor", databytes, 1);
-            txt_moleRed.Text = Math.Floor(moleColors[0]).ToString();
-            txt_moleRed.IsReadOnly = false;
-            txt_moleBlue.Text = Math.Floor(moleColors[1]).ToString();
-            txt_moleBlue.IsReadOnly = false;
-            txt_moleGreen.Text = Math.Floor(moleColors[2]).ToString();
-            txt_moleGreen.IsReadOnly = false; 
-            txt_moleAlpha.Text = Math.Floor(moleColors[3]).ToString();
-            txt_moleAlpha.IsReadOnly = false;
-
-
-            ///START BODY DATA///
-            //read Overall data
-            txt_ovrlHeight.Text = getStat("shapeValueBody", databytes, 3).ToString();
-            txt_ovrlHeight.IsReadOnly = false;
-            txt_headSize.Text = getStat("shapeValueBody", databytes, 48).ToString();
-            txt_headSize.IsReadOnly = false;
-
-            //read Breast data
-            txt_bustSize.Text = getStat("shapeValueBody", databytes, 8).ToString();
-            txt_bustSize.IsReadOnly = false;
-            txt_bustHeight.Text = getStat("shapeValueBody", databytes, 13).ToString();
-            txt_bustHeight.IsReadOnly = false;
-            txt_bustDirection.Text = getStat("shapeValueBody", databytes, 18).ToString();
-            txt_bustDirection.IsReadOnly = false;
-            txt_bustSpacing.Text = getStat("shapeValueBody", databytes, 23).ToString();
-            txt_bustSpacing.IsReadOnly = false;
-            txt_bustAngle.Text = getStat("shapeValueBody", databytes, 28).ToString();
-            txt_bustAngle.IsReadOnly = false;
-            txt_bustLength.Text = getStat("shapeValueBody", databytes, 33).ToString();
-            txt_bustLength.IsReadOnly = false;
-            txt_areolaSize.Text = getStat("areolaSize", databytes).ToString();
-            txt_areolaSize.IsReadOnly = false;
-            txt_areolaDepth.Text = getStat("shapeValueBody", databytes, 38).ToString();
-            txt_areolaDepth.IsReadOnly = false;
-            txt_bustSoftness.Text = getStat("bustSoftness", databytes).ToString();
-            txt_bustSoftness.IsReadOnly = false;
-            txt_bustWeight.Text = getStat("bustWeight", databytes).ToString();
-            txt_bustWeight.IsReadOnly = false;
-            txt_nippleWidth.Text = getStat("shapeValueBody", databytes, 43).ToString();
-            txt_nippleWidth.IsReadOnly = false;
-            txt_nippleDepth.Text = getStat("bustSoftness", databytes, -18).ToString();
-            txt_nippleDepth.IsReadOnly = false;
-
-            //read Upper Body data
-            txt_neckWidth.Text = getStat("shapeValueBody", databytes, 53).ToString();
-            txt_neckWidth.IsReadOnly = false;
-            txt_neckThickness.Text = getStat("shapeValueBody", databytes, 58).ToString();
-            txt_neckThickness.IsReadOnly = false;
-            txt_shoulderWidth.Text = getStat("shapeValueBody", databytes, 63).ToString();
-            txt_shoulderWidth.IsReadOnly = false;
-            txt_shoulderThickness.Text = getStat("shapeValueBody", databytes, 68).ToString();
-            txt_shoulderThickness.IsReadOnly = false;
-            txt_chestWidth.Text = getStat("shapeValueBody", databytes, 73).ToString();
-            txt_chestWidth.IsReadOnly = false;
-            txt_chestThickness.Text = getStat("shapeValueBody", databytes, 78).ToString();
-            txt_chestThickness.IsReadOnly = false;
-            txt_waistWidth.Text = getStat("shapeValueBody", databytes, 83).ToString();
-            txt_waistWidth.IsReadOnly = false;
-            txt_waistThickness.Text = getStat("shapeValueBody", databytes, 88).ToString();
-            txt_waistThickness.IsReadOnly = false;
-
-            //read Lower body data
-            txt_waistHeight.Text = getStat("shapeValueBody", databytes, 93).ToString();
-            txt_waistHeight.IsReadOnly = false;
-            txt_pelvisWidth.Text = getStat("shapeValueBody", databytes, 98).ToString();
-            txt_pelvisWidth.IsReadOnly = false;
-            txt_pelvisThickness.Text = getStat("shapeValueBody", databytes, 103).ToString();
-            txt_pelvisThickness.IsReadOnly = false;
-            txt_hipsWidth.Text = getStat("shapeValueBody", databytes, 108).ToString();
-            txt_hipsWidth.IsReadOnly = false;
-            txt_hipsThickness.Text = getStat("shapeValueBody", databytes, 113).ToString();
-            txt_hipsThickness.IsReadOnly = false;
-            txt_buttSize.Text = getStat("shapeValueBody", databytes, 118).ToString();
-            txt_buttSize.IsReadOnly = false;
-            txt_buttAngle.Text = getStat("shapeValueBody", databytes, 123).ToString();
-            txt_buttAngle.IsReadOnly = false;
-
-            //read Arms data
-            txt_shoulderSize.Text = getStat("shapeValueBody", databytes, 148).ToString();
-            txt_shoulderSize.IsReadOnly = false;
-            txt_upperArms.Text = getStat("shapeValueBody", databytes, 153).ToString();
-            txt_upperArms.IsReadOnly = false;
-            txt_forearm.Text = getStat("shapeValueBody", databytes, 158).ToString();
-            txt_forearm.IsReadOnly = false;
-
-            //read Legs data
-
-            txt_thighs.Text = getStat("shapeValueBody", databytes, 128).ToString();
-            txt_thighs.IsReadOnly = false;
-            txt_legs.Text = getStat("shapeValueBody", databytes, 133).ToString();
-            txt_legs.IsReadOnly = false;
-            txt_calves.Text = getStat("shapeValueBody", databytes, 138).ToString();
-            txt_calves.IsReadOnly = false;
-            txt_ankles.Text = getStat("shapeValueBody", databytes, 143).ToString();
-            txt_ankles.IsReadOnly = false;
-
+            //load all stats from card data to text boxes
+            for(var i=0;i<allstats.Length;i++)
+            {
+                allstats[i].LoadData(databytes);
+            }
+ 
             //show image
-            // showCard.Source = new BitmapImage(new Uri(openFileDialog.FileName));
             showCard.Source = ToImage(pictobytes);
 
             //housekeeping
@@ -537,7 +602,7 @@ namespace HS2CharEdit
             byte[] filebytes = new byte[databytes.Length+pictobytes.Length];
             pictobytes.CopyTo(filebytes, 0);
             databytes.CopyTo(filebytes, pictobytes.Length);
-            //MessageBox.Show(filebytes.Length.ToString());
+           
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "png files (*.png)|*.png";
             saveFileDialog.RestoreDirectory = true;
@@ -598,6 +663,25 @@ namespace HS2CharEdit
         {
             //AboutBox1 p = new AboutBox1();
             //p.Show();
+        }
+
+        private void btn_Paypal_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("If you want to show appreciation for development, you can send tips to:\ncontact@jaceybooks.com\nOpen Paypal in your browser now?",
+                                          "Donate",
+                                          MessageBoxButton.YesNo,
+                                          MessageBoxImage.Question);
+            if(result== MessageBoxResult.Yes)
+            {
+                string url = "https://www.paypal.com/myaccount/transfer/homepage";
+                Process.Start("explorer", url);
+            }
+        }
+
+        private void btn_Patreon_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://patreon.com/cttcjim";
+            Process.Start("explorer", url);
         }
     }
 }

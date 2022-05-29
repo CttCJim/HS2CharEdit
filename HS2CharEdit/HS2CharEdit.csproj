@@ -7,11 +7,11 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
-    <ApplicationIcon>profile_user_ui_person_account_ux_icon_224738.ico</ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
     <PackageProjectUrl>https://www.patreon.com/CttCJim</PackageProjectUrl>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <FileVersion>0.1.0.0</FileVersion>
-    <PackageIcon></PackageIcon>
+    <AssemblyVersion>0.1</AssemblyVersion>
+    <FileVersion>0.1</FileVersion>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -23,7 +23,35 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="profile_user_ui_person_account_ux_icon_224738.ico" />
+    <None Remove="Digital-Patreon-Logo_FieryCoral.png" />
+    <None Remove="Digital-Patreon-Wordmark_FieryCoral.png" />
+    <None Remove="imagefile.ico" />
+    <None Remove="load.ico" />
+    <None Remove="loadfile.ico" />
+    <None Remove="loadfile.png" />
+    <None Remove="pplogo.png" />
+    <None Remove="PP_Acceptance_Marks_for_LogoCenter_76x48.png" />
+    <None Remove="revert.ico" />
+    <None Remove="save.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="icon.ico" />
+    <None Include="E:\Illusion\Honey Select 2 DX\UserData\chara\female\WIP\app\icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <Resource Include="Digital-Patreon-Logo_FieryCoral.png" />
+    <Resource Include="imagefile.ico" />
+    <Resource Include="pplogo.png" />
+    <Resource Include="revert.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Digital-Patreon-Wordmark_FieryCoral.png" />
+    <Resource Include="loadfile.ico" />
+    <Resource Include="PP_Acceptance_Marks_for_LogoCenter_76x48.png" />
+    <Resource Include="save.ico" />
   </ItemGroup>
 
 </Project>
