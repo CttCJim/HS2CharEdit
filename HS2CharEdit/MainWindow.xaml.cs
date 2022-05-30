@@ -42,10 +42,16 @@ namespace HS2CharEdit
         //finders are arrays of strings. Before getting data, the object will find each keyword in turn and start after the last one.
         static readonly string[] finders_facetype = { "headId" };
         static readonly string[] finders_skintype = { "bustWeight" };
+        static readonly string[] finders_righteye = { "whiteColor", "whiteColor" };
+        static readonly string[] finders_righteye_whites = { "whiteColor", };
         static readonly string[] finders_bodypaint1 = { "sunburnColor", "paintInfo" };
         static readonly string[] finders_bodypaint1a = { "sunburnColor", "paintInfo", "layoutId" };
-        static readonly string[] finders_bodypaint2 = { "sunburnColor","paintInfo","rotation" };
+        static readonly string[] finders_bodypaint2 = { "sunburnColor", "paintInfo", "rotation" };
         static readonly string[] finders_bodypaint2a = { "sunburnColor", "paintInfo", "rotation", "layoutId" };
+        static readonly string[] finders_facepaint1 = { "lipGloss", "paintInfo" };
+        static readonly string[] finders_facepaint1a = { "lipGloss", "paintInfo", "layoutId" };
+        static readonly string[] finders_facepaint2 = { "lipGloss", "paintInfo", "rotation" };
+        static readonly string[] finders_facepaint2a = { "lipGloss", "paintInfo", "rotation", "layoutId" };
 
 
         //Charstat(string cname, string dstyle, string pn, int ofst, string ender="")
@@ -54,6 +60,121 @@ namespace HS2CharEdit
         //c2 for no, c3 for yes
         new Charstat("txt_futastate", "hex", "futanari", 0, "b0"),
         ///START HEAD DATA///
+        //read Eye Shadow data
+        new Charstat("txt_eyeshadowType", "hex", "eyeshadowId", 0, "ae"),
+        new Charstat("txt_eyeshadowRed","color","eyeshadowColor",1,"0"),
+        new Charstat("txt_eyeshadowGreen","color","eyeshadowColor",1,"1"),
+        new Charstat("txt_eyeshadowBlue","color","eyeshadowColor",1,"2"),
+        new Charstat("txt_eyeshadowAlpha","color","eyeshadowColor",1,"3"),
+        new Charstat("txt_eyeshadowShine", "normal", "eyeshadowGloss"),
+        //read Cheeks data
+        new Charstat("txt_cheekType", "hex", "cheekId", 0, "aa"),
+        new Charstat("txt_cheekRed","color","cheekColor",1,"0"),
+        new Charstat("txt_cheekGreen","color","cheekColor",1,"1"),
+        new Charstat("txt_cheekBlue","color","cheekColor",1,"2"),
+        new Charstat("txt_cheekAlpha","color","cheekColor",1,"3"),
+        new Charstat("txt_cheekShine", "normal", "cheekGloss"),
+        //read Lips data
+        new Charstat("txt_lipType", "hex", "lipId", 0, "a8"),
+        new Charstat("txt_lipRed","color","lipColor",1,"0"),
+        new Charstat("txt_lipGreen","color","lipColor",1,"1"),
+        new Charstat("txt_lipBlue","color","lipColor",1,"2"),
+        new Charstat("txt_lipAlpha","color","lipColor",1,"3"),
+        new Charstat("txt_lipShine", "normal", "lipGloss"),
+        //read Face Paint 1 data
+        new Charstat("txt_paintf1Type", "hex", "id", 0, "a5",finders_facepaint1),
+        new Charstat("txt_paintf1Red","color","color",1,"0",finders_facepaint1),
+        new Charstat("txt_paintf1Green","color","color",1,"1",finders_facepaint1),
+        new Charstat("txt_paintf1Blue","color","color",1,"2", finders_facepaint1),
+        new Charstat("txt_paintf1Alpha","color","color",1,"3", finders_facepaint1),
+        new Charstat("txt_paintf1Shine", "normal", "glossPower",0,"", finders_facepaint1),
+        new Charstat("txt_paintf1Texture", "normal", "metallicPower",0,"", finders_facepaint1),
+        new Charstat("txt_paintf1Position", "hex", "layoutId", 0, "a6", finders_facepaint1),
+        new Charstat("txt_paintf1Width", "normal", "layout", 1,"", finders_facepaint1a),
+        new Charstat("txt_paintf1Height", "normal", "layout", 6,"", finders_facepaint1a),
+        new Charstat("txt_paintf1PosX", "normal", "layout", 11,"", finders_facepaint1a),
+        new Charstat("txt_paintf1PosY", "normal", "layout", 16,"", finders_facepaint1a),
+        new Charstat("txt_paintf1Rotation", "normal", "rotation", 0,"", finders_facepaint1a),
+        //read Face Paint 2 data
+        new Charstat("txt_paintf2Type", "hex", "id", 0, "a5",finders_facepaint2),
+        new Charstat("txt_paintf2Red","color","color",1,"0",finders_facepaint2),
+        new Charstat("txt_paintf2Green","color","color",1,"1",finders_facepaint2),
+        new Charstat("txt_paintf2Blue","color","color",1,"2", finders_facepaint2),
+        new Charstat("txt_paintf2Alpha","color","color",1,"3", finders_facepaint2),
+        new Charstat("txt_paintf2Shine", "normal", "glossPower",0,"", finders_facepaint2),
+        new Charstat("txt_paintf2Texture", "normal", "metallicPower",0,"", finders_facepaint2),
+        new Charstat("txt_paintf2Position", "hex", "layoutId", 0, "a6", finders_facepaint2),
+        new Charstat("txt_paintf2Width", "normal", "layout", 1,"", finders_facepaint2a),
+        new Charstat("txt_paintf2Height", "normal", "layout", 6,"", finders_facepaint2a),
+        new Charstat("txt_paintf2PosX", "normal", "layout", 11,"", finders_facepaint2a),
+        new Charstat("txt_paintf2PosY", "normal", "layout", 16,"", finders_facepaint2a),
+        new Charstat("txt_paintf2Rotation", "normal", "rotation", 0,"", finders_facepaint2a),
+        //read Left/Right Eye data
+        //weirdly, pupil = iris, black = pupil, and whites = whites.
+        new Charstat("txt_leftIrisType", "hex", "pupilId", 0, "aa"),
+        new Charstat("txt_rightIrisType", "hex", "pupilId", 0, "aa",finders_righteye),
+        new Charstat("txt_leftIrisRed","color","pupilColor",1,"0"),
+        new Charstat("txt_leftIrisGreen","color","pupilColor",1,"1"),
+        new Charstat("txt_leftIrisBlue","color","pupilColor",1,"2"),
+        new Charstat("txt_leftIrisAlpha","color","pupilColor",1,"3"),
+        new Charstat("txt_rightIrisRed","color","pupilColor",1,"0",finders_righteye),
+        new Charstat("txt_rightIrisGreen","color","pupilColor",1,"1",finders_righteye),
+        new Charstat("txt_rightIrisBlue","color","pupilColor",1,"2",finders_righteye),
+        new Charstat("txt_rightIrisAlpha","color","pupilColor",1,"3",finders_righteye),
+        new Charstat("txt_leftIrisGlow", "normal", "pupilEmission", 0),
+        new Charstat("txt_leftIrisWidth", "normal", "pupilW", 0),
+        new Charstat("txt_leftIrisHeight", "normal", "pupilH", 0),
+        new Charstat("txt_rightIrisGlow", "normal", "pupilEmission", 0,"",finders_righteye),
+        new Charstat("txt_rightIrisWidth", "normal", "pupilW", 0,"",finders_righteye),
+        new Charstat("txt_rightIrisHeight", "normal", "pupilH", 0,"",finders_righteye),
+        new Charstat("txt_leftPupilType", "hex", "blackId", 0, "aa"),
+        new Charstat("txt_rightPupilType", "hex", "blackId", 0, "aa",finders_righteye),
+        new Charstat("txt_leftPupilRed","color","blackColor",1,"0"),
+        new Charstat("txt_leftPupilGreen","color","blackColor",1,"1"),
+        new Charstat("txt_leftPupilBlue","color","blackColor",1,"2"),
+        new Charstat("txt_leftPupilAlpha","color","blackColor",1,"3"),
+        new Charstat("txt_rightPupilRed","color","blackColor",1,"0",finders_righteye),
+        new Charstat("txt_rightPupilGreen","color","blackColor",1,"1",finders_righteye),
+        new Charstat("txt_rightPupilBlue","color","blackColor",1,"2",finders_righteye),
+        new Charstat("txt_rightPupilAlpha","color","blackColor",1,"3",finders_righteye),
+        new Charstat("txt_leftPupilWidth", "normal", "blackW", 0),
+        new Charstat("txt_leftPupilHeight", "normal", "blackH", 0),
+        new Charstat("txt_rightPupilWidth", "normal", "blackW", 0,"",finders_righteye),
+        new Charstat("txt_rightPupilHeight", "normal", "blackH", 0,"",finders_righteye),
+        new Charstat("txt_leftWhitesRed","color","whiteColor",1,"0"),
+        new Charstat("txt_leftWhitesGreen","color","whiteColor",1,"1"),
+        new Charstat("txt_leftWhitesBlue","color","whiteColor",1,"2"),
+        new Charstat("txt_leftWhitesAlpha","color","whiteColor",1,"3"),
+        new Charstat("txt_rightWhitesRed","color","whiteColor",1,"0",finders_righteye_whites),
+        new Charstat("txt_rightWhitesGreen","color","whiteColor",1,"1",finders_righteye_whites),
+        new Charstat("txt_rightWhitesBlue","color","whiteColor",1,"2",finders_righteye_whites),
+        new Charstat("txt_rightWhitesAlpha","color","whiteColor",1,"3",finders_righteye_whites),
+        //read Iris Settings data
+        new Charstat("txt_irisHeightAdj", "normal", "pupilY", 0),
+        new Charstat("txt_irisShadow", "normal", "pupilH", 0),
+        //read Eye Highlights data
+        new Charstat("txt_hlType", "hex", "hlId", 0, "a7"),
+        new Charstat("txt_hlRed","color","hlColor",1,"0"),
+        new Charstat("txt_hlGreen","color","hlColor",1,"1"),
+        new Charstat("txt_hlBlue","color","hlColor",1,"2"),
+        new Charstat("txt_hlAlpha","color","hlColor",1,"3"),
+        new Charstat("txt_hlWidth", "normal", "hlLayout", 1),
+        new Charstat("txt_hlHeight", "normal", "hlLayout", 6),
+        new Charstat("txt_hlXAxis", "normal", "hlLayout", 11),
+        new Charstat("txt_hlYAxis", "normal", "hlLayout", 16),
+        new Charstat("txt_hlTilt", "normal", "hlTilt", 0),
+        //read Eyebrow Type data
+        new Charstat("txt_eyebrowType", "hex", "eyebrowId", 0, "ac"),
+        new Charstat("txt_eyebrowRed","color","eyebrowColor",1,"0"),
+        new Charstat("txt_eyebrowGreen","color","eyebrowColor",1,"1"),
+        new Charstat("txt_eyebrowBlue","color","eyebrowColor",1,"2"),
+        new Charstat("txt_eyebrowAlpha","color","eyebrowColor",1,"3"),
+        //read Eyelash Type data
+        new Charstat("txt_eyelashType", "hex", "eyelashesId", 0, "ae"),
+        new Charstat("txt_eyelashRed","color","eyelashesColor",1,"0"),
+        new Charstat("txt_eyelashGreen","color","eyelashesColor",1,"1"),
+        new Charstat("txt_eyelashBlue","color","eyelashesColor",1,"2"),
+        new Charstat("txt_eyelashAlpha","color","eyelashesColor",1,"3"),
         //read Facial Type data
         new Charstat("txt_headContour", "hex", "headId", 0, "a6"),
         new Charstat("txt_headSkin", "hex", "skinId", 0, "a8", finders_facetype),
