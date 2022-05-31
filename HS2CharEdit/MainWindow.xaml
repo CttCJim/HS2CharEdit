@@ -158,6 +158,116 @@
         </Border>
 
         <TabControl x:Name="statsBox" Height="354" Canvas.Left="301" Canvas.Top="44" HorizontalAlignment="Center" VerticalAlignment="Top" Width="460" >
+            <TabItem Header="Character">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Name" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="1"/>
+                    <!-- PreviewTextInput="TextBox" -->
+                    <TextBox        
+                        x:Name="txt_charName" 
+                        IsReadOnly="True"
+                        HorizontalAlignment="Left" Height="20"
+                        TextWrapping="Wrap" VerticalAlignment="Top" Width="150"
+                        MouseDoubleClick="SelectAddress"
+                        GotKeyboardFocus="SelectAddress"
+                        PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,9,0,0" 
+                            
+                    />
+                    <Label Content="Birth Month" HorizontalAlignment="Left" Margin="5,38,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="1"/>
+                    <TextBox 
+                                    x:Name="txt_birthMonth" Visibility="Hidden"
+                                    IsReadOnly="True" TextChanged="datetextChanged"
+                                    PreviewTextInput="NumericBox" 
+                                    HorizontalAlignment="Left" Height="20"
+                                    TextWrapping="Wrap" VerticalAlignment="Top" Width="40"
+                                    MouseDoubleClick="SelectAddress"
+                                    GotKeyboardFocus="SelectAddress"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="4"
+                                    Grid.ColumnSpan="2" Margin="0,39,0,0" 
+                            
+                                />
+                    <ComboBox x:Name="cbo_month" 
+                        SelectionChanged="datedropChanged"
+                        SelectedValuePath="Content"
+                        HorizontalAlignment="Left" Height="25"
+                         VerticalAlignment="Top" Width="40"
+                        Grid.Column="1"  Margin="0,39,0,0" 
+                        >
+                        <ComboBoxItem Content="01 Jan"></ComboBoxItem>
+                        <ComboBoxItem Content="02 Feb"></ComboBoxItem>
+                        <ComboBoxItem Content="03 Mar"></ComboBoxItem>
+                        <ComboBoxItem Content="04 Apr"></ComboBoxItem>
+                        <ComboBoxItem Content="05 May"></ComboBoxItem>
+                        <ComboBoxItem Content="06 Jun"></ComboBoxItem>
+                        <ComboBoxItem Content="07 Jul"></ComboBoxItem>
+                        <ComboBoxItem Content="08 Aug"></ComboBoxItem>
+                        <ComboBoxItem Content="09 Sep"></ComboBoxItem>
+                        <ComboBoxItem Content="10 Oct"></ComboBoxItem>
+                        <ComboBoxItem Content="11 Nov"></ComboBoxItem>
+                        <ComboBoxItem Content="12 Dec"></ComboBoxItem>
+                    </ComboBox>
+
+                    <ComboBox x:Name="cbo_day" 
+                        SelectionChanged="datedropChanged"
+                        SelectedValuePath="Content"                              
+                        HorizontalAlignment="Left" Height="25"
+                         VerticalAlignment="Top" Width="40"
+                        Grid.Column="1"  Margin="0,69,0,0" 
+                        >
+                        <ComboBoxItem Content="01" />
+                        <ComboBoxItem Content="02" />
+                        <ComboBoxItem Content="03" />
+                        <ComboBoxItem Content="04" />
+                        <ComboBoxItem Content="05" />
+                        <ComboBoxItem Content="06" />
+                        <ComboBoxItem Content="07" />
+                        <ComboBoxItem Content="08" />
+                        <ComboBoxItem Content="09" />
+                        <ComboBoxItem Content="10" />
+                        <ComboBoxItem Content="11" />
+                        <ComboBoxItem Content="12" />
+                        <ComboBoxItem Content="13" />
+                        <ComboBoxItem Content="14" />
+                        <ComboBoxItem Content="15" />
+                        <ComboBoxItem Content="16" />
+                        <ComboBoxItem Content="17" />
+                        <ComboBoxItem Content="18" />
+                        <ComboBoxItem Content="19" />
+                        <ComboBoxItem Content="20" />
+                        <ComboBoxItem Content="21" />
+                        <ComboBoxItem Content="22" />
+                        <ComboBoxItem Content="23" />
+                        <ComboBoxItem Content="24" />
+                        <ComboBoxItem Content="25" />
+                        <ComboBoxItem Content="26" />
+                        <ComboBoxItem Content="27" />
+                        <ComboBoxItem Content="28" />
+                        <ComboBoxItem Content="29" />
+                        <ComboBoxItem Content="30" />
+                        <ComboBoxItem Content="31" />
+                    </ComboBox>
+
+                    <Label Content="Birth Day" HorizontalAlignment="Left" Margin="5,68,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="1"/>
+                    <TextBox 
+                                    x:Name="txt_birthDay" Visibility="Hidden"
+                                    IsReadOnly="True" TextChanged="datetextChanged"
+                                    PreviewTextInput="NumericBox" 
+                                    HorizontalAlignment="Left" Height="20"
+                                    TextWrapping="Wrap" VerticalAlignment="Top" Width="40"
+                                    MouseDoubleClick="SelectAddress"
+                                    GotKeyboardFocus="SelectAddress"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="4" Grid.ColumnSpan="2" Margin="0,69,0,0" 
+                                />
+                    <Button x:Name="btn_editName" IsEnabled="False" Grid.Column="3" Content="Edit" HorizontalAlignment="Left" Height="20" Margin="6,9,0,0" VerticalAlignment="Top" Width="50" Click="btn_editName_Click"/>
+
+                </Grid>
+            </TabItem>
             <TabItem Header="Body Shape">
                 <TabControl Width="450">
                     <TabItem Header="Overall">
@@ -208,7 +318,7 @@
                             <CheckBox x:Name="chk_futastate" Content="Futanari"
                                       Checked="Futacheck"
                                       Unchecked="Futacheck"
-                                      HorizontalAlignment="Left" Margin="8,70,0,0" 
+                                      HorizontalAlignment="Left" Margin="0,70,0,0" 
                                       VerticalAlignment="Top" Grid.Column="2"/>
                         </Grid>
                     </TabItem>
@@ -3306,7 +3416,7 @@
                 </TabControl>
             </TabItem>
             <TabItem Header="Makeup">
-                <TabControl Width="450">
+                <TabControl Width="450" >
                     <TabItem Header="Eye Shadow">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -3484,6 +3594,78 @@
                                 <ColumnDefinition Width="100"/>
                                 <ColumnDefinition Width="100"/>
                             </Grid.ColumnDefinitions>
+                            <Label Content="Type" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="2"/>
+                            <TextBox 
+                                    x:Name="txt_lipType" 
+                                    IsReadOnly="True" TextChanged="statChanged" 
+                                    PreviewTextInput="HexBox" 
+                                    HorizontalAlignment="Left" Height="20"
+                                    TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                                    MouseDoubleClick="SelectAddress"
+                                    GotKeyboardFocus="SelectAddress"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="1" Margin="0,9,0,0" 
+                            
+                                />
+                            <Label Content="Color (Red)" HorizontalAlignment="Left" Margin="4,33,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+                            <TextBox 
+                                x:Name="txt_lipRed" 
+                                IsReadOnly="True" TextChanged="statChanged" 
+                                PreviewTextInput="NumericBox" 
+                                HorizontalAlignment="Left" Height="20" Margin="0,39,0,0" 
+                                TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                                MouseDoubleClick="SelectAddress"
+                                GotKeyboardFocus="SelectAddress"
+                                PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="1" 
+                            
+                                />
+                            <Label Content="Color (Green)" HorizontalAlignment="Left" Margin="4,63,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="4"/>
+                            <TextBox 
+                                x:Name="txt_lipGreen" 
+                                IsReadOnly="True" TextChanged="statChanged" 
+                                PreviewTextInput="NumericBox" 
+                                HorizontalAlignment="Left" Height="20" Margin="0,69,0,0" 
+                                TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                                MouseDoubleClick="SelectAddress"
+                                GotKeyboardFocus="SelectAddress"
+                                PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="1"
+                            
+                                />
+                            <Label Content="Color (Blue)" HorizontalAlignment="Left" Margin="4,93,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="3"/>
+                            <TextBox 
+                                x:Name="txt_lipBlue" 
+                                IsReadOnly="True" TextChanged="statChanged" 
+                                PreviewTextInput="NumericBox" 
+                                HorizontalAlignment="Left" Height="20" Margin="0,99,0,0" 
+                                TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                                MouseDoubleClick="SelectAddress"
+                                GotKeyboardFocus="SelectAddress"
+                                PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="1"
+                            
+                                />
+                            <Label Content="Color (Alpha)" HorizontalAlignment="Left" Margin="4,123,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="4"/>
+                            <TextBox 
+                                x:Name="txt_lipAlpha" 
+                                IsReadOnly="True" TextChanged="statChanged" 
+                                PreviewTextInput="NumericBox" 
+                                HorizontalAlignment="Left" Height="20" Margin="0,129,0,0" 
+                                TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                                MouseDoubleClick="SelectAddress"
+                                GotKeyboardFocus="SelectAddress"
+                                PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="1"
+                            
+                                />
+                            <Label Content="Shine" HorizontalAlignment="Left" Margin="4,153,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="4"/>
+                            <TextBox 
+                                x:Name="txt_lipShine" 
+                                IsReadOnly="True" TextChanged="statChanged" 
+                                PreviewTextInput="NumericBox" 
+                                HorizontalAlignment="Left" Height="20" Margin="0,159,0,0" 
+                                TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                                MouseDoubleClick="SelectAddress"
+                                GotKeyboardFocus="SelectAddress"
+                                PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="1"
+                            
+                                />
 
                         </Grid>
                     </TabItem>
@@ -3827,6 +4009,121 @@
                     </TabItem>
                 </TabControl>
             </TabItem>
+            <TabItem Header="Hair">
+                <TabControl Width="450">
+                    <TabItem Header="Settings">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox x:Name="chk_match_hair" Content="Match back and bangs color"
+                                      Checked="hairmatchcheck"
+                                      Unchecked="hairmatchcheck"
+                                      HorizontalAlignment="Left" Margin="5,10,0,0" 
+                                      VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="1" />
+
+                            <CheckBox x:Name="chk_auto_hair" Content="Auto set root and color"
+                                      Checked="automatchcheck"
+                                      Unchecked="automatchcheck"
+                                      HorizontalAlignment="Left" Margin="5,40,0,0" 
+                                      VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="1" />
+
+                            <CheckBox x:Name="chk_axis_hair" Content="Match Hair Axis Settings"
+                                      Checked="axismatchcheck"
+                                      Unchecked="axismatchcheck"
+                                      HorizontalAlignment="Left" Margin="5,70,0,0" 
+                                      VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="1" />
+
+
+                            <TextBox x:Name="txt_match_hair" 
+                                     Visibility="Hidden"
+                                     TextChanged="hairmatchtxtChanged"
+                                     Grid.Column="1" Grid.ColumnSpan="2" 
+                                     HorizontalAlignment="Left" Height="25" 
+                                     Margin="41,10,0,0" TextWrapping="Wrap" 
+                                     Text="TextBox" VerticalAlignment="Top" Width="65"/>
+                            <TextBox x:Name="txt_auto_hair_color" 
+                                     Visibility="Hidden"
+                                     TextChanged="autohairtxtChanged"
+                                     Grid.Column="1" Grid.ColumnSpan="2" 
+                                     HorizontalAlignment="Left" Height="25" 
+                                     Margin="41,30,0,0" TextWrapping="Wrap" 
+                                     Text="TextBox" VerticalAlignment="Top" Width="65"/>
+
+                            <TextBox x:Name="txt_hair_axis_ctrl" 
+                                     Visibility="Hidden"
+                                     TextChanged="axishairtxtChanged"
+                                     Grid.Column="1" Grid.ColumnSpan="2" 
+                                     HorizontalAlignment="Left" Height="25" 
+                                     Margin="41,30,0,0" TextWrapping="Wrap" 
+                                     Text="TextBox" VerticalAlignment="Top" Width="65"/>
+
+                            <Label Content="Back Hair Type" HorizontalAlignment="Left" 
+                                   Margin="0,95,0,0" VerticalAlignment="Top" 
+                                   Grid.Column="0" Grid.ColumnSpan="2"/>
+                            <TextBox 
+                                    x:Name="txt_backHairType" 
+                                    IsReadOnly="True" TextChanged="statChanged" 
+                                    PreviewTextInput="HexBox" Text="coming soon"
+                                    HorizontalAlignment="Left" Height="20"
+                                    TextWrapping="Wrap" VerticalAlignment="Top" Width="100"
+                                    MouseDoubleClick="SelectAddress"
+                                    GotKeyboardFocus="SelectAddress"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" 
+                                    Grid.Column="0" Margin="120,99,0,0" 
+                                />
+                            <Label Content="Bangs Type" HorizontalAlignment="Left" 
+                                   Margin="0,125,0,0" VerticalAlignment="Top" 
+                                   Grid.Column="0" Grid.ColumnSpan="2"/>
+                            <TextBox 
+                                    x:Name="txt_bangsType" 
+                                    IsReadOnly="True" TextChanged="statChanged" 
+                                    PreviewTextInput="HexBox" Text="coming soon"
+                                    HorizontalAlignment="Left" Height="20"
+                                    TextWrapping="Wrap" VerticalAlignment="Top" Width="100"
+                                    MouseDoubleClick="SelectAddress"
+                                    GotKeyboardFocus="SelectAddress"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" 
+                                    Grid.Column="0" Margin="120,129,0,0" 
+                                />
+                            <Label Content="Side Hair Type" HorizontalAlignment="Left" 
+                                   Margin="0,155,0,0" VerticalAlignment="Top" 
+                                   Grid.Column="0" Grid.ColumnSpan="2"/>
+                            <TextBox 
+                                    x:Name="txt_sideHairType" 
+                                    IsReadOnly="True" TextChanged="statChanged" 
+                                    PreviewTextInput="HexBox" Text="coming soon"
+                                    HorizontalAlignment="Left" Height="20"
+                                    TextWrapping="Wrap" VerticalAlignment="Top" Width="100"
+                                    MouseDoubleClick="SelectAddress"
+                                    GotKeyboardFocus="SelectAddress"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" 
+                                    Grid.Column="0" Margin="120,159,0,0" 
+                                />
+                            <Label Content="Extension Type" HorizontalAlignment="Left" 
+                                   Margin="0,185,0,0" VerticalAlignment="Top" 
+                                   Grid.Column="0" Grid.ColumnSpan="2"/>
+                            <TextBox 
+                                    x:Name="txt_hairExtType" 
+                                    Text="coming soon"
+                                    IsReadOnly="True" TextChanged="statChanged" 
+                                    PreviewTextInput="HexBox" 
+                                    HorizontalAlignment="Left" Height="20"
+                                    TextWrapping="Wrap" VerticalAlignment="Top" Width="100"
+                                    MouseDoubleClick="SelectAddress"
+                                    GotKeyboardFocus="SelectAddress"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" 
+                                    Grid.Column="0" Margin="120,189,0,0" 
+                                />
+
+
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+
         </TabControl>
 
     </Canvas>

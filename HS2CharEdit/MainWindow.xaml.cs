@@ -34,7 +34,7 @@ namespace HS2CharEdit
     {
         //globals
         Window mainWindow;
-        string VERSIONNUMBER = "0.1.1.1";
+        string VERSIONNUMBER = "0.2.0.0";
         byte[] pictobytes = Array.Empty<byte>();
         byte[] pictobytes_restore = Array.Empty<byte>();
         byte[] databytes = Array.Empty<byte>();
@@ -56,9 +56,27 @@ namespace HS2CharEdit
 
         //Charstat(string cname, string dstyle, string pn, int ofst, string ender="")
         readonly Charstat[] allstats = {
+        ///START PERSONALITY DATA///
+        new Charstat("txt_charName", "text", "fullname", 1, "ab"),
+        new Charstat("txt_birthMonth", "dec1byte", "birthMonth", 0, "a8"),
+        new Charstat("txt_birthDay", "dec1byte", "birthDay", 0, "a9"),
         ///read Futanari
         //c2 for no, c3 for yes
         new Charstat("txt_futastate", "hex", "futanari", 0, "b0"),
+        ///SATE HAIR DATA///
+        //hair checkboxes
+        new Charstat("txt_match_hair", "hex", "sameSetting", 0, "ab"),
+        new Charstat("txt_auto_hair_color", "hex", "autoSetting", 0, "ac"),
+        new Charstat("txt_hair_axis_ctrl", "hex", "ctrlTogether", 0, "a5"),
+        //hair types
+        //txt_backHairType txt_bangsType txt_sideHairType txt_hairExtType
+        /*
+        new Charstat("txt_backHairType", "hex", "sameSetting", 0, "ab"),
+        new Charstat("txt_bangsType", "hex", "sameSetting", 0, "ab"),
+        new Charstat("txt_sideHairType", "hex", "sameSetting", 0, "ab"),
+        new Charstat("txt_hairExtType", "hex", "sameSetting", 0, "ab"),
+        */
+
         ///START HEAD DATA///
         //read Eye Shadow data
         new Charstat("txt_eyeshadowType", "hex", "eyeshadowId", 0, "ae"),
@@ -233,7 +251,6 @@ namespace HS2CharEdit
         new Charstat("txt_eyelidShape1", "normal", "shapeValueFace", 153),
         new Charstat("txt_eyelidShape2", "normal", "shapeValueFace", 158),
         new Charstat("txt_eyeOpenMax", "normal", "eyesOpenMax"),
-        //txt_eyeOpenMax
         //read Nose data
         new Charstat("txt_noseHeight", "normal", "shapeValueFace", 163),
         new Charstat("txt_noseDepth", "normal", "shapeValueFace", 168),
@@ -388,6 +405,7 @@ namespace HS2CharEdit
             //"hex": variable-length hex values loaded from a starting position to a terminating hex byte, displayed as a raw hex string
             //"color": 4x4-byte RGBa values read as a batch from a starting position. R,G,B are x255 to get ingame values; Alpha value is x100. Numbers must be rounded down.
             //"normal": 4-byte hex values loaded from a starting position, x100 and rounded to nearest int to get in-game value.
+            //"dec1byte": 1-byte hax value representing an integer. Used in Month and Day boxes.
             public int offset;
             public int pos;
             public int idx=0;
@@ -402,6 +420,41 @@ namespace HS2CharEdit
                 end = ender;
                 if(ff==null) { ff = Array.Empty<string>(); }
                 findfirst = ff;
+            }
+            private string ASCIItoHex(string Value)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                foreach (byte b in Value)
+                {
+                    sb.Append(string.Format("{0:x2}", b));
+                }
+
+                return sb.ToString();
+            }
+
+            public static string HexToASCII(String hexString)
+            {
+                try
+                {
+                    string ascii = string.Empty;
+
+                    for (int i = 0; i < hexString.Length; i += 2)
+                    {
+                        String hs = string.Empty;
+
+                        hs = hexString.Substring(i, 2);
+                        uint decval = System.Convert.ToUInt32(hs, 16);
+                        char character = System.Convert.ToChar(decval);
+                        ascii += character;
+
+                    }
+
+                    return ascii;
+                }
+                catch (Exception ex) { Console.WriteLine(ex.Message); }
+
+                return string.Empty;
             }
 
             public void LoadData(byte[] filebytes)
@@ -425,6 +478,8 @@ namespace HS2CharEdit
                 string hexStr = "";
                 switch (datastyle)
                 {
+                    case "dec1byte":
+                    case "text":
                     case "hex":
                         {
                             pos = Search(filebytes, searchfor) + propName.Length + offset;
@@ -443,10 +498,22 @@ namespace HS2CharEdit
                                 }
                                 else
                                 {
+                                    if (datastyle == "text")
+                                    {
+                                        hexStr = HexToASCII(hexStr);
+                                    }
+                                    if (datastyle == "dec1byte")
+                                    {
+                                        hexStr = Convert.ToInt32(hexStr, 16).ToString();
+                                    }
                                     displayval = hexStr;
                                     break;
                                    // return hexStr;
                                 }
+                            }
+                            if(datastyle == "dec1byte")
+                            {
+                                pos -= 1; //patching 1-off error in save position
                             }
                             break;
                         }
@@ -510,21 +577,36 @@ namespace HS2CharEdit
                             break;
                         }
                 }
-
+                bool ro = false;
+                if(datastyle=="text")
+                {
+                    ro = true;
+                }
                 //put the new value in the text box
-                ((MainWindow)Application.Current.MainWindow).fillBox(controlname, displayval); //leave last argument empty to set ReadOnly false
+                ((MainWindow)Application.Current.MainWindow).fillBox(controlname, displayval, ro); //leave last argument empty to set ReadOnly false
             }
 
-            public void Update(string contents)
+            public void Update(string thedata)
             {
                 //convert data to bytes and call public function to save it to the active memory copy of the card data
 
                 //1 - convert content string to hex string
                 byte[] content = Array.Empty<byte>();
-                displayval = contents;
+                displayval = thedata;
 
                 switch (datastyle)
                 {
+                    case "dec1byte":
+                        {
+                            int i = int.Parse(displayval);
+                            content = BitConverter.GetBytes(i).Take(1).ToArray();
+                            break;
+                        }
+                    case "text":
+                        {
+                            content = StringToByteArray(ASCIItoHex(displayval));
+                            break;
+                        }
                     case "hex":
                         {
                             //convert display value directly to bytes
@@ -560,41 +642,78 @@ namespace HS2CharEdit
                 }
 
                 //2 - call external func to save the data
-                ((MainWindow)Application.Current.MainWindow).SaveData(content, pos, end);
+                string edr = end;
+                if(datastyle=="dec1byte")
+                {
+                    edr = "1byte";
+                }
+                ((MainWindow)Application.Current.MainWindow).SaveData(content, pos, edr);
 
             }
         }
 
+        public void axismatchcheck(object sender, RoutedEventArgs e)
+        {
+            checktotext(chk_axis_hair, txt_hair_axis_ctrl);
+        }
+        public void axishairtxtChanged(object sender, RoutedEventArgs e)
+        {
+            texttocheck(chk_axis_hair, txt_hair_axis_ctrl);
+        }
+        public void automatchcheck(object sender, RoutedEventArgs e)
+        {
+            checktotext(chk_auto_hair, txt_auto_hair_color);
+        }
+        public void autohairtxtChanged(object sender, RoutedEventArgs e)
+        {
+            texttocheck(chk_auto_hair, txt_auto_hair_color);
+        }
+        public void hairmatchcheck(object sender, RoutedEventArgs e)
+        {
+            checktotext(chk_match_hair, txt_match_hair);
+        }
+        public void hairmatchtxtChanged(object sender, RoutedEventArgs e)
+        {
+            texttocheck(chk_match_hair, txt_match_hair);
+        }
         public void Futacheck(object sender, RoutedEventArgs e)
         {
-            if(loading) { return; } //changed during a loading event
+            checktotext(chk_futastate, txt_futastate);
+        }
+        public void futatxtChanged(object sender, RoutedEventArgs e)
+        {
+            texttocheck(chk_futastate, txt_futastate);
+        }
 
-            //the futa checkbox has been changed by the user
-            bool? fchecked = chk_futastate.IsChecked;
-            if((fchecked.HasValue)&&(fchecked == true))
+        public void checktotext(CheckBox thecheck, TextBox thetext)
+        {
+            if(loading) { return; } //changed during a loading event
+            bool? fchecked = thecheck.IsChecked;
+            if ((fchecked.HasValue) && (fchecked == true))
             {
                 loading = true;
-                txt_futastate.Text = "c3";
+                thetext.Text = "c3";
                 loading = false;
-            } else {
+            }
+            else
+            {
                 loading = true;
-                txt_futastate.Text = "c2";
+                thetext.Text = "c2";
                 loading = false;
             }
         }
-
-        public void futatxtChanged(object sender, RoutedEventArgs e)
+        public void texttocheck(CheckBox thecheck, TextBox thetext)
         {
             loading = true;
-            if(txt_futastate.Text=="c3")
+            if (thetext.Text == "c3")
             {
                 //check box yes
-                chk_futastate.IsChecked = true;
-            } 
+                thecheck.IsChecked = true;
+            }
             else
             {
                 //check box no
-                chk_futastate.IsChecked = false;
+                thecheck.IsChecked = false;
             }
             loading = false;
         }
@@ -602,12 +721,13 @@ namespace HS2CharEdit
 
         public void SaveData(byte[] contentbytes, int pos, string end = "")
         {
+            //MessageBox.Show("Startpos: " + pos);
             //save the content into the right place in a copy of databytes
             //using a copy here in case the array size changes
             byte[] before;
             byte[] after;
             int contentlength;
-            if (end=="")
+            if (end==""||end=="1byte")
             {
                 contentlength = contentbytes.Length;
             }
@@ -632,6 +752,7 @@ namespace HS2CharEdit
                     }
                 }
                 contentlength = postemp - pos;
+               // MessageBox.Show("contentlength: " + contentlength);
             }
 
             //get bytes before and after the data
@@ -647,12 +768,12 @@ namespace HS2CharEdit
 
             //overwrite databytes with the new array
             databytes = combined;
-
+            /*
             for (var i = 0; i < allstats.Length; i++)
             {
                 allstats[i].LoadData(databytes);
             }
-
+            */
         }
         
         public static byte[] StringToByteArray(string hex)
@@ -666,9 +787,61 @@ namespace HS2CharEdit
             string boxname = ((TextBox)sender).Name;
             string data = ((TextBox)sender).Text;
             //find the object for this box and save changes to the copy in memory
+            textboxchanged(boxname, data);
+        }
+
+        private void datedropChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (loading) { return; }
+
+            //not loading; user has changed the data
+            string boxname = ((ComboBox)sender).Name;
+            int idx = ((ComboBox)sender).SelectedIndex;
+            string tp = "0" + (idx + 1).ToString();
+            tp = tp.Substring(tp.Length - 2);
+
+            if (boxname == "cbo_day")
+            {
+                txt_birthDay.Text = tp;
+            }
+            if (boxname == "cbo_month")
+            {
+                txt_birthMonth.Text = tp;
+            }
+        }
+
+        private void datetextChanged(object sender, TextChangedEventArgs args)
+        {
+            string boxname = ((TextBox)sender).Name;
+            string data = ((TextBox)sender).Text;
+
+           // MessageBox.Show(boxname + " text change: " + data);
+            if(!loading){ 
+                //update the changes to memory
+                textboxchanged(boxname, data);
+                return;
+            } else
+            {
+                //this is on card load
+                //make sure the combobox matches
+                if (boxname == "txt_birthMonth")
+                {
+                    cbo_month.SelectedIndex = int.Parse(data) - 1;
+                    //TODO: check for out of range day
+                }
+                if (boxname == "txt_birthDay")
+                {
+                    cbo_day.SelectedIndex = int.Parse(data) - 1;
+                }
+            }
+        }
+
+        private void textboxchanged(string boxname, string data)
+        {
+            //find the object for this box and save changes to the copy in memory
             for (var i = 0; i < allstats.Length; i++)
             {
-                if (allstats[i].controlname==boxname)
+                if (allstats[i].controlname == boxname)
                 {
                     allstats[i].Update(data);
                     break;
@@ -759,7 +932,15 @@ namespace HS2CharEdit
 
         private void WinLoaded(object sender, RoutedEventArgs e)
         {
-            
+            //initialize
+            /*
+            //test: converting int to 1 byte array
+            int i = int.Parse("12");
+            byte[] content = BitConverter.GetBytes(i).Take(1).ToArray();
+            //display result
+            string curstring = BitConverter.ToString(content).ToLower();
+            MessageBox.Show(curstring);
+            */
 
         }
 
@@ -931,6 +1112,20 @@ namespace HS2CharEdit
         {
             string url = "https://patreon.com/cttcjim";
             Process.Start("explorer", url);
+        }
+
+        private void btn_editName_Click(object sender, RoutedEventArgs e)
+        {
+            Button thebutton = ((Button)sender);
+            if (txt_charName.IsReadOnly)
+            {
+                thebutton.Content = "Save";
+            } else
+            {
+                thebutton.Content = "Edit";
+                textboxchanged(txt_charName.Name, txt_charName.Text);
+            }
+            txt_charName.IsReadOnly = !txt_charName.IsReadOnly;
         }
     }
 }
