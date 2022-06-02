@@ -34,12 +34,17 @@ namespace HS2CharEdit
     {
         //globals
         Window mainWindow;
-        string VERSIONNUMBER = "0.2.0.0";
+        string VERSIONNUMBER = "0.2.1.0";
         byte[] pictobytes = Array.Empty<byte>();
         byte[] pictobytes_restore = Array.Empty<byte>();
         byte[] databytes = Array.Empty<byte>();
+        int[] fullnameInts = new int[8]; //used for tracking length and size changes for fullname change
+        int[] fullnameIntsPos = new int[8]; //used for tracking length and size changes for fullname change
+        //positions displaced by character name - 5xpos, 1xsize
+
         bool loading = false;
         //finders are arrays of strings. Before getting data, the object will find each keyword in turn and start after the last one.
+        static readonly string[] finders_personality = { "personality" };
         static readonly string[] finders_facetype = { "headId" };
         static readonly string[] finders_skintype = { "bustWeight" };
         static readonly string[] finders_righteye = { "whiteColor", "whiteColor" };
@@ -57,13 +62,19 @@ namespace HS2CharEdit
         //Charstat(string cname, string dstyle, string pn, int ofst, string ender="")
         readonly Charstat[] allstats = {
         ///START PERSONALITY DATA///
-        new Charstat("txt_charName", "text", "fullname", 1, "ab"),
+        new Charstat("txt_charName", "fullname", "fullname", 1, "ab"),
         new Charstat("txt_birthMonth", "dec1byte", "birthMonth", 0, "a8"),
         new Charstat("txt_birthDay", "dec1byte", "birthDay", 0, "a9"),
+        new Charstat("txt_personality", "dec1byte", "personality", 0, "instance01"),
+        new Charstat("txt_trait", "dec1byte", "trait", 0, "a4"),
+        new Charstat("txt_mentality", "dec1byte", "mind", 0, "aa"),
+        new Charstat("txt_sextrait", "dec1byte", "hAttribute", 0, "b0"),
+        //txt_voiceRate
+        new Charstat("txt_voiceRate", "normal", "voiceRate",0,"instance01"), //need to get 2nd instance
         ///read Futanari
         //c2 for no, c3 for yes
         new Charstat("txt_futastate", "hex", "futanari", 0, "b0"),
-        ///SATE HAIR DATA///
+        ///START HAIR DATA///
         //hair checkboxes
         new Charstat("txt_match_hair", "hex", "sameSetting", 0, "ab"),
         new Charstat("txt_auto_hair_color", "hex", "autoSetting", 0, "ac"),
@@ -76,7 +87,6 @@ namespace HS2CharEdit
         new Charstat("txt_sideHairType", "hex", "sameSetting", 0, "ab"),
         new Charstat("txt_hairExtType", "hex", "sameSetting", 0, "ab"),
         */
-
         ///START HEAD DATA///
         //read Eye Shadow data
         new Charstat("txt_eyeshadowType", "hex", "eyeshadowId", 0, "ae"),
@@ -410,6 +420,7 @@ namespace HS2CharEdit
             public int pos;
             public int idx=0;
             public string[] findfirst;
+            public int instance=0;
 
             public Charstat(string cname, string dstyle, string pn, int ofst = 0, string ender = "", string[]? ff = null)
             {
@@ -421,6 +432,12 @@ namespace HS2CharEdit
                 if(ff==null) { ff = Array.Empty<string>(); }
                 findfirst = ff;
             }
+
+            public string GetDatastyle()
+            {
+                return datastyle;
+            }
+
             private string ASCIItoHex(string Value)
             {
                 StringBuilder sb = new StringBuilder();
@@ -462,27 +479,50 @@ namespace HS2CharEdit
                 //string to search for
                 byte[] searchfor = Encoding.ASCII.GetBytes(propName);
 
-                if(findfirst.Length>1)
+                //check findfirsts
+                for(var i=0;i<findfirst.Length; i++)
                 {
-                    for(var i=0;i<findfirst.Length; i++)
-                    {
-                        //find position of the marker to start reading from
-                        byte[] marker = Encoding.ASCII.GetBytes(findfirst[i]);
-                        int starthere = Search(filebytes, marker);
-                        //look at bytes starting from there for the first instance
-                        filebytes = filebytes.Skip(starthere + findfirst[i].Length).ToArray();
+                    //find position of the marker to start reading from
+                    byte[] marker = Encoding.ASCII.GetBytes(findfirst[i]);
+                    int starthere = Search(filebytes, marker);
+                    //look at bytes starting from there for the first instance
+                    filebytes = filebytes.Skip(starthere + findfirst[i].Length).ToArray();
 
+                }
+
+                if(end.Length>=8)
+                {
+                    if (end[..8] == "instance")
+                    {
+                        string t = end.Substring(8,end.Length - 8);
+                        instance = int.Parse(t);
+                        end = "";
                     }
+
                 }
 
                 string hexStr = "";
                 switch (datastyle)
                 {
                     case "dec1byte":
-                    case "text":
+                        {
+                            pos = Search(filebytes, searchfor,instance) + propName.Length + offset;
+
+                            string curstring;
+                            byte[] current;
+
+                            current = filebytes.Skip(pos).Take(1).ToArray();
+                            curstring = BitConverter.ToString(current).ToLower();
+                            hexStr = Convert.ToInt32(curstring, 16).ToString();
+                            displayval = hexStr;
+
+                            break;
+                        }
+                    case "fullname":
                     case "hex":
                         {
                             pos = Search(filebytes, searchfor) + propName.Length + offset;
+                            int oldpos = pos;
 
                             string curstring = "";
                             byte[] current;
@@ -494,27 +534,34 @@ namespace HS2CharEdit
                                 if (curstring != end.ToLower())
                                 {
                                     hexStr += curstring;
+                                    if (datastyle == "dec1byte")
+                                    {
+                                        hexStr = Convert.ToInt32(hexStr, 16).ToString();
+                                        displayval = hexStr;
+                                        break;
+                                    }
                                     pos++;
                                 }
                                 else
                                 {
-                                    if (datastyle == "text")
+                                    if (datastyle == "fullname")
                                     {
                                         hexStr = HexToASCII(hexStr);
-                                    }
-                                    if (datastyle == "dec1byte")
-                                    {
-                                        hexStr = Convert.ToInt32(hexStr, 16).ToString();
                                     }
                                     displayval = hexStr;
                                     break;
                                    // return hexStr;
                                 }
                             }
-                            if(datastyle == "dec1byte")
+                            
+                            pos = oldpos;
+
+                            if(datastyle=="fullname")
                             {
-                                pos -= 1; //patching 1-off error in save position
+                                //get extra ints
+                                //currently doing this in the LoadCard function instead.
                             }
+                            
                             break;
                         }
                     case "color":
@@ -556,14 +603,13 @@ namespace HS2CharEdit
                     case "normal":
                         {
                             //find position of the stat in question
-                            pos = Search(filebytes, searchfor) + propName.Length + offset + 1; //+1 for the delimiter character
+                            pos = Search(filebytes, searchfor, instance) + propName.Length + offset + 1; //+1 for the delimiter character
 
                             //get bytes[] at position
                             var hexNum = filebytes.Skip(pos).Take(4).ToArray();
 
                             // Hexadecimal Representation of number
                             hexStr = BitConverter.ToString(hexNum).Replace("-", "");
-
                             // Converting to integer
                             Int32 IntRep = Int32.Parse(hexStr, NumberStyles.AllowHexSpecifier);
                             // Integer to Byte[] and presenting it for float conversion
@@ -578,7 +624,7 @@ namespace HS2CharEdit
                         }
                 }
                 bool ro = false;
-                if(datastyle=="text")
+                if(datastyle=="fullname")
                 {
                     ro = true;
                 }
@@ -602,9 +648,11 @@ namespace HS2CharEdit
                             content = BitConverter.GetBytes(i).Take(1).ToArray();
                             break;
                         }
-                    case "text":
+                    case "fullname":
                         {
                             content = StringToByteArray(ASCIItoHex(displayval));
+                            ((MainWindow)Application.Current.MainWindow).SaveNameInts(content.Length);
+
                             break;
                         }
                     case "hex":
@@ -648,7 +696,11 @@ namespace HS2CharEdit
                     edr = "1byte";
                 }
                 ((MainWindow)Application.Current.MainWindow).SaveData(content, pos, edr);
-
+                if(datastyle=="fullname")
+                {
+                    //length may have changed. update lositions of all variables by loading them from the copy in memory.
+                    ((MainWindow)Application.Current.MainWindow).updateAll();
+                }
             }
         }
 
@@ -718,16 +770,37 @@ namespace HS2CharEdit
             loading = false;
         }
 
+        public void SaveNameInts(int namelen)
+        {
+            for(int i = 0; i < 8; i++)
+            {
+                //get new value of int
+                int newlen = fullnameInts[i] + namelen;
+                //convert to hex bytes
+                byte[] td = BitConverter.GetBytes(newlen);
+
+                if((i == 5)||(i == 7))
+                {
+                    //only 1 byte for this one
+                    byte[] data = { td[0] };
+                    SaveData(data, fullnameIntsPos[i]);
+                } else
+                {
+                    byte[] data = { td[1], td[0] };
+                    SaveData(data, fullnameIntsPos[i]);
+                }
+            }
+        }
 
         public void SaveData(byte[] contentbytes, int pos, string end = "")
         {
-            //MessageBox.Show("Startpos: " + pos);
             //save the content into the right place in a copy of databytes
             //using a copy here in case the array size changes
             byte[] before;
             byte[] after;
             int contentlength;
-            if (end==""||end=="1byte")
+            string[] validEnds = { "","1byte","0","1","2","3"};
+            if(validEnds.Contains(end))
             {
                 contentlength = contentbytes.Length;
             }
@@ -736,7 +809,7 @@ namespace HS2CharEdit
                 //variable length; need to find out how long the original data was
                 string curstring = "";
                 byte[] current;
-                int postemp = pos;
+                int postemp = pos+1; //start 1 forward because fullname has the same first and last character.
 
                 while (curstring != end.ToLower())
                 {
@@ -752,7 +825,6 @@ namespace HS2CharEdit
                     }
                 }
                 contentlength = postemp - pos;
-               // MessageBox.Show("contentlength: " + contentlength);
             }
 
             //get bytes before and after the data
@@ -760,7 +832,6 @@ namespace HS2CharEdit
             after = databytes.Skip(pos + contentlength).ToArray();
             
             byte[] combined = new byte[before.Length+ contentbytes.Length + after.Length];
-            
 
             before.CopyTo(combined, 0);
             contentbytes.CopyTo(combined, pos);
@@ -790,32 +861,49 @@ namespace HS2CharEdit
             textboxchanged(boxname, data);
         }
 
-        private void datedropChanged(object sender, SelectionChangedEventArgs args)
+        private void dropSelectChanged(object sender, SelectionChangedEventArgs args)
         {
             if (loading) { return; }
 
             //not loading; user has changed the data
             string boxname = ((ComboBox)sender).Name;
             int idx = ((ComboBox)sender).SelectedIndex;
-            string tp = "0" + (idx + 1).ToString();
+            if((boxname=="cbo_month")||(boxname=="cbo_day"))
+            {
+                idx += 1;
+            }
+            string tp = "0" + idx.ToString();
             tp = tp.Substring(tp.Length - 2);
 
-            if (boxname == "cbo_day")
+            switch (boxname)
             {
-                txt_birthDay.Text = tp;
+                case "cbo_month":
+                    txt_birthMonth.Text = tp;
+                    break;
+                case "cbo_day":
+                    txt_birthDay.Text = tp;
+                    break;
+                case "cbo_personality":
+                    txt_personality.Text = tp;
+                    break;
+                case "cbo_trait":
+                    txt_trait.Text = tp;
+                    break;
+                case "cbo_mentality":
+                    txt_mentality.Text = tp;
+                    break;
+                case "cbo_sextrait":
+                    txt_sextrait.Text = tp;
+                    break;
             }
-            if (boxname == "cbo_month")
-            {
-                txt_birthMonth.Text = tp;
-            }
+
         }
 
-        private void datetextChanged(object sender, TextChangedEventArgs args)
+        private void droptextChanged(object sender, TextChangedEventArgs args)
         {
             string boxname = ((TextBox)sender).Name;
             string data = ((TextBox)sender).Text;
 
-           // MessageBox.Show(boxname + " text change: " + data);
             if(!loading){ 
                 //update the changes to memory
                 textboxchanged(boxname, data);
@@ -824,14 +912,27 @@ namespace HS2CharEdit
             {
                 //this is on card load
                 //make sure the combobox matches
-                if (boxname == "txt_birthMonth")
+                switch(boxname)
                 {
-                    cbo_month.SelectedIndex = int.Parse(data) - 1;
-                    //TODO: check for out of range day
-                }
-                if (boxname == "txt_birthDay")
-                {
-                    cbo_day.SelectedIndex = int.Parse(data) - 1;
+                    case "txt_birthMonth":
+                        cbo_month.SelectedIndex = int.Parse(data) - 1;
+                        //TODO: check for out of range day
+                        break;
+                    case "txt_birthDay":
+                        cbo_day.SelectedIndex = int.Parse(data) - 1;
+                        break;
+                    case "txt_personality":
+                        cbo_personality.SelectedIndex = int.Parse(data);
+                        break;
+                    case "txt_trait":
+                        cbo_trait.SelectedIndex = int.Parse(data);
+                        break;
+                    case "txt_mentality":
+                        cbo_mentality.SelectedIndex = int.Parse(data);
+                        break;
+                    case "txt_sextrait":
+                        cbo_sextrait.SelectedIndex = int.Parse(data);
+                        break;
                 }
             }
         }
@@ -849,12 +950,87 @@ namespace HS2CharEdit
             }
         }
 
+        private void CheckNumBox(object sender, EventArgs e)
+        {
+            if (loading) { return; } //don't take action while loading a card!
+            TextBox tb = (TextBox)sender;
+            int numValue;
+
+            //check if it's a number
+            bool isNum = int.TryParse(tb.Text, out numValue);
+            if(!isNum)
+            {
+                tb.Text = "0";
+                MessageBox.Show("Invalid number detected. Reset to zero.");
+            }
+
+            //check if it's out of range (color values)
+            //get object
+            string ds="";
+            int idx=0;
+            for (var i = 0; i < allstats.Length; i++)
+            {
+                if (allstats[i].controlname == tb.Name)
+                {
+                     ds = allstats[i].datastyle;
+                     idx = allstats[i].idx;
+                }
+            }
+
+            int min=0;
+            int max=0;
+            bool hasLimits = false;
+            switch(ds)
+            {
+                case "color":
+                    {
+                        min = 0;
+                        if(idx==3)
+                        {
+                            max = 100;
+                        } else
+                        {
+                            max = 255;
+                        }
+                        hasLimits = true;
+                        break;
+                    }
+            }
+
+            if(hasLimits)
+            {
+                if ((numValue < min) || (numValue > max))
+                {
+                    tb.Text = "0";
+                    MessageBox.Show("Out of range (" + min.ToString() + "-" + max.ToString()+"). Reset to zero.");
+                }
+            }
+
+
+            string boxname = tb.Name;
+            string data = tb.Text;
+            cardchanged = true;
+            //find the object for this box and save changes to the copy in memory
+            textboxchanged(boxname, data);
+        }
+
+        private void NameEnterChecker(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                //MessageBox.Show("Pressed enter.");
+                //btn_editName.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                btn_editName.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
+        }
+
+        /*
         private void NumericBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
+            Regex regex = new Regex("[^0-9-]+");
             e.Handled = regex.IsMatch(e.Text);
             if (!e.Handled) { cardchanged = true; }
-        }
+        }*/
 
         private void HexBox(object sender, TextCompositionEventArgs e)
         {
@@ -886,29 +1062,14 @@ namespace HS2CharEdit
             }
         }
 
-        static int Search(byte[] src, byte[] pattern)
-        {
-            int maxFirstCharSlot = src.Length - pattern.Length + 1;
-            for (int i = 0; i < maxFirstCharSlot; i++)
-            {
-                if (src[i] != pattern[0]) // compare only first byte
-                    continue;
-
-                // found a match on first byte, now try to match rest of the pattern
-                for (int j = pattern.Length - 1; j >= 1; j--)
-                {
-                    if (src[i + j] != pattern[j]) break;
-                    if (j == 1) return i;
-                }
-            }
-            return -1;
-        }
-
         public MainWindow()
         {
             InitializeComponent();
+            
             Title += VERSIONNUMBER;
             mainWindow = this;
+
+            getReleases();
             /*
             byte[] x = StringToByteArray("3fab56ac");
             string test = BitConverter.ToString(x);
@@ -921,6 +1082,62 @@ namespace HS2CharEdit
             string test = BitConverter.ToString(lVal);
             MessageBox.Show(test + " : " + x.ToString());
             */
+        }
+
+        async public void getReleases()
+        {
+            try
+            {
+                Octokit.GitHubClient client = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("HS2CharEdit"));
+
+                var releases = await client.Repository.Release.GetAll("CttCJim", "HS2CharEdit");
+                var latest = releases[0];
+                // MessageBox.Show("The latest release is tagged at " + latest.TagName + " and is named " + latest.Name);
+                string v1 = VERSIONNUMBER;
+                string v2 = latest.TagName.Replace("v", "");
+
+                var version1 = new Version(v1);
+                var version2 = new Version(v2);
+
+                var result = version1.CompareTo(version2);
+                if (result > 0)
+                {
+                    //MessageBox.Show("version1 is greater");
+                    MessageBoxResult res = MessageBox.Show("Warning: your version number is " + version1 + " but the latest version is " + version2 + ".\nFor best performance, only download this software from the official Github release at https://github.com/CttCJim/HS2CharEdit/releases \nDo you want to go there now?",
+                        "Update Available",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning);
+                    if (res == MessageBoxResult.Yes)
+                    {
+                        string url = "https://github.com/CttCJim/HS2CharEdit/releases";
+                        Process.Start("explorer", url);
+                    }
+                }
+                else if (result < 0)
+                {
+                    //MessageBox.Show("version2 is greater");
+                    //***
+                    MessageBoxResult res = MessageBox.Show("A new version is available! (" + version2 + ") Go to Releases to down load it now?",
+                                  "Update Available",
+                                  MessageBoxButton.YesNo,
+                                  MessageBoxImage.Question);
+                    if (res == MessageBoxResult.Yes)
+                    {
+                        string url = "https://github.com/CttCJim/HS2CharEdit/releases";
+                        Process.Start("explorer", url);
+                    }
+
+                }
+                else
+                {
+                    // MessageBox.Show("versions are equal");
+                }
+            } catch
+            {
+                MessageBox.Show("Failed to verify version number. To check for updates go to https://github.com/CttCJim/HS2CharEdit/releases or visit my Patreon.");
+            }
+            
+            return;
         }
 
         public byte[] FloatToHex(float f)
@@ -966,6 +1183,15 @@ namespace HS2CharEdit
             }
         }
 
+        public void updateAll()
+        {
+            //update all stats from databytes in memory
+            for (var i = 0; i < allstats.Length; i++)
+            {
+                allstats[i].LoadData(databytes);
+            }
+        }
+
         private void DropCard(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -980,16 +1206,46 @@ namespace HS2CharEdit
             }
         }
 
+        static int Search(byte[] src, byte[] pattern, int occurrence = 0)
+        {
+            int timesfound = 0;
+            int maxFirstCharSlot = src.Length - pattern.Length + 1;
+            for (int i = 0; i < maxFirstCharSlot; i++)
+            {
+                if (src[i] != pattern[0]) // compare only first byte
+                    continue;
+
+                // found a match on first byte, now try to match rest of the pattern
+                for (int j = pattern.Length - 1; j >= 1; j--)
+                {
+                    if (src[i + j] != pattern[j]) break;
+                    if (j == 1)
+                    {
+                        if (timesfound == occurrence)
+                        {
+                            return i;
+                        }
+                        else
+                        {
+                            timesfound++;
+                            continue;
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
+
         private void LoadCard(string cardfile)
         {
-            
-            if(cardchanged)
+
+            if (cardchanged)
             {
-                MessageBoxResult result = MessageBox.Show(this,"You have unsaved changes! Load a new card?",
+                MessageBoxResult result = MessageBox.Show(this, "You have unsaved changes! Load a new card?",
                                           "Confirmation",
                                           MessageBoxButton.YesNo,
                                           MessageBoxImage.Question);
-                if(result== MessageBoxResult.No)
+                if (result == MessageBoxResult.No)
                 {
                     return;
                 }
@@ -1003,18 +1259,63 @@ namespace HS2CharEdit
             var IENDpos = Search(filebytes, searchfor); //get position of IEND
             pictobytes_restore = pictobytes = filebytes.Skip(0).Take(IENDpos + 8).ToArray(); //get all bytes from start until IEND+7 in order to get everything including IEND®B`‚
             databytes = filebytes.Skip(IENDpos + 8).ToArray(); //get everything from IEND+8 til the end of the file
-            if(databytes.Length==0)
+            if (databytes.Length == 0)
             {
                 MessageBox.Show("The PNG you selected has no card data", "Card Read Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
+
+
             //load all stats from card data to text boxes
-            for(var i=0;i<allstats.Length;i++)
+            for (var i = 0; i < allstats.Length; i++)
             {
                 allstats[i].LoadData(databytes);
             }
- 
+
+            //get name length stats
+            int oldnamelen = txt_charName.Text.Length;
+            //getpos will return the char after a keyword
+            //getpos(byte[] filebytes, string propName, string[] findfirst)
+            /*
+        int[] fullnameInts = new int[7]; //used for tracking length and size changes for fullname change
+        int[] fullnameIntsPos = new int[7]; //used for tracking length and size changes for fullname change
+        //positions displaced by character name - 5xpos, 1xsize
+             * */
+            searchfor = Encoding.ASCII.GetBytes("pos");
+            fullnameIntsPos[0] = Search(databytes, searchfor) + 4;
+            fullnameIntsPos[1] = Search(databytes, searchfor, 4) + 4;
+            fullnameIntsPos[2] = Search(databytes, searchfor, 5) + 4;
+            fullnameIntsPos[3] = Search(databytes, searchfor, 6) + 4;
+            fullnameIntsPos[4] = Search(databytes, searchfor, 7) + 4;
+            searchfor = Encoding.ASCII.GetBytes("size");
+            fullnameIntsPos[5] = Search(databytes, searchfor, 3) + 4; //this one is 1 byte only
+            fullnameIntsPos[6] = Search(databytes, searchfor, 7) + 6;
+            searchfor = Encoding.ASCII.GetBytes("fullname");
+            fullnameIntsPos[7] = Search(databytes, searchfor) + 8; //this one is 1 byte only
+
+            for (int i=0;i<8;i++)
+            {
+                int j; //number of bytes to read
+                if ((i == 5)||(i==7))
+                {
+                    j = 1;
+                }
+                else
+                {
+                    j = 2;
+                }
+                //get bytes[] at position
+                var hexNum = databytes.Skip(fullnameIntsPos[i]).Take(j).ToArray();
+
+                // Hexadecimal Representation of number
+                string hexStr = BitConverter.ToString(hexNum).Replace("-", "");
+
+                // Converting to integer
+                fullnameInts[i] = Int32.Parse(hexStr, NumberStyles.HexNumber) - oldnamelen;
+            }
+
+
             //show image
             showCard.Source = ToImage(pictobytes);
 

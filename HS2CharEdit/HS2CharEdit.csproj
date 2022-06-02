@@ -41,6 +41,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <PackageReference Include="Octokit" Version="0.51.0" />
     <Resource Include="Digital-Patreon-Logo_FieryCoral.png" />
     <Resource Include="imagefile.ico" />
     <Resource Include="pplogo.png" />
