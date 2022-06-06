@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -34,7 +35,7 @@ namespace HS2CharEdit
     {
         //globals
         Window mainWindow;
-        string VERSIONNUMBER = "0.2.1.0";
+        string VERSIONNUMBER = "0.2.1.1";
         byte[] pictobytes = Array.Empty<byte>();
         byte[] pictobytes_restore = Array.Empty<byte>();
         byte[] databytes = Array.Empty<byte>();
@@ -44,7 +45,6 @@ namespace HS2CharEdit
 
         bool loading = false;
         //finders are arrays of strings. Before getting data, the object will find each keyword in turn and start after the last one.
-        static readonly string[] finders_personality = { "personality" };
         static readonly string[] finders_facetype = { "headId" };
         static readonly string[] finders_skintype = { "bustWeight" };
         static readonly string[] finders_righteye = { "whiteColor", "whiteColor" };
@@ -69,8 +69,9 @@ namespace HS2CharEdit
         new Charstat("txt_trait", "dec1byte", "trait", 0, "a4"),
         new Charstat("txt_mentality", "dec1byte", "mind", 0, "aa"),
         new Charstat("txt_sextrait", "dec1byte", "hAttribute", 0, "b0"),
-        //txt_voiceRate
-        new Charstat("txt_voiceRate", "normal", "voiceRate",0,"instance01"), //need to get 2nd instance
+        new Charstat("txt_dependence", "dec1byte", "Dependence", 0, "a5",null,"sld_dependence"),
+        new Charstat("txt_broken", "dec1byte", "Broken", 0, "a5", null, "sld_broken"),
+        new Charstat("txt_voiceRate", "normal", "voiceRate",0,"instance01",null,"sld_voiceRate"), //need to get 2nd instance
         ///read Futanari
         //c2 for no, c3 for yes
         new Charstat("txt_futastate", "hex", "futanari", 0, "b0"),
@@ -421,8 +422,12 @@ namespace HS2CharEdit
             public int idx=0;
             public string[] findfirst;
             public int instance=0;
+            public string slidername = "";
 
-            public Charstat(string cname, string dstyle, string pn, int ofst = 0, string ender = "", string[]? ff = null)
+            public Charstat(
+                string cname, string dstyle, 
+                string pn, int ofst = 0, string ender = "", 
+                string[]? ff = null, string sdrname = "")
             {
                 controlname = cname;
                 datastyle = dstyle;
@@ -431,6 +436,7 @@ namespace HS2CharEdit
                 end = ender;
                 if(ff==null) { ff = Array.Empty<string>(); }
                 findfirst = ff;
+                slidername = sdrname;
             }
 
             public string GetDatastyle()
@@ -638,7 +644,14 @@ namespace HS2CharEdit
 
                 //1 - convert content string to hex string
                 byte[] content = Array.Empty<byte>();
+              /*  if(displayval!=thedata)
+                {
+                    //make sure the box matches the data
+                    ((MainWindow)Application.Current.MainWindow).fillBox(controlname, thedata);
+                }*/
                 displayval = thedata;
+
+                
 
                 switch (datastyle)
                 {
@@ -950,6 +963,51 @@ namespace HS2CharEdit
             }
         }
 
+        private void Slider_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            //get data
+            double dval = ((Slider)sender).Value;
+            int val = (int)Math.Round(dval);
+            string data = val.ToString();
+            string sdrname = ((Slider)sender).Name;
+
+            //change txtbox value
+
+            for (var i = 0; i < allstats.Length; i++)
+            {
+                if (allstats[i].slidername == sdrname)
+                {
+                   // MessageBox.Show(data);
+                    TextBox? textBox = this.FindName(allstats[i].controlname) as TextBox;
+                    if(textBox!=null)
+                    {
+                        textBox.Text = data;
+                    }
+                    allstats[i].Update(data);
+                    break;
+                }
+            }
+        }
+
+        public void TextToSlider(object sender, TextChangedEventArgs e)
+        {
+            string boxname = ((TextBox)sender).Name;
+            for (var i = 0; i < allstats.Length; i++)
+            {
+                if (allstats[i].controlname == boxname)
+                {
+                    string slidername = allstats[i].slidername;
+                    
+                    Slider? theSlider = this.FindName(slidername) as Slider;
+                    if (theSlider != null)
+                    {
+                        theSlider.Value = int.Parse(((TextBox)sender).Text);
+                    }
+                    break;
+                }
+            }
+        }
+
         private void CheckNumBox(object sender, EventArgs e)
         {
             if (loading) { return; } //don't take action while loading a card!
@@ -1116,7 +1174,7 @@ namespace HS2CharEdit
                 else if (result < 0)
                 {
                     //MessageBox.Show("version2 is greater");
-                    //***
+                    
                     MessageBoxResult res = MessageBox.Show("A new version is available! (" + version2 + ") Go to Releases to down load it now?",
                                   "Update Available",
                                   MessageBoxButton.YesNo,
@@ -1328,8 +1386,14 @@ namespace HS2CharEdit
 
         private void btnSaveFile_Click(object sender, RoutedEventArgs e)
         {
-           // byte[] filebytes = new byte[pictobytes.Length];
-           // pictobytes.CopyTo(filebytes, 0);
+            //trick the selected control into losing focus and saving its data
+            txt_focusSnatcher.Focus();
+            //allow time for the lost focus event to fire async
+            //i know this is a hack, eff off. i'll do something better later.
+            System.Threading.Thread.Sleep(50);
+
+            // byte[] filebytes = new byte[pictobytes.Length];
+            // pictobytes.CopyTo(filebytes, 0);
             byte[] filebytes = new byte[databytes.Length+pictobytes.Length];
             pictobytes.CopyTo(filebytes, 0);
             databytes.CopyTo(filebytes, pictobytes.Length);
