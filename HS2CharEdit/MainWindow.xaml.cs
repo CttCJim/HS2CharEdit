@@ -35,7 +35,7 @@ namespace HS2CharEdit
     {
         //globals
         Window mainWindow;
-        string VERSIONNUMBER = "0.2.1.1";
+        string VERSIONNUMBER = "0.2.1.2";
         byte[] pictobytes = Array.Empty<byte>();
         byte[] pictobytes_restore = Array.Empty<byte>();
         byte[] databytes = Array.Empty<byte>();
@@ -57,6 +57,7 @@ namespace HS2CharEdit
         static readonly string[] finders_facepaint1a = { "lipGloss", "paintInfo", "layoutId" };
         static readonly string[] finders_facepaint2 = { "lipGloss", "paintInfo", "rotation" };
         static readonly string[] finders_facepaint2a = { "lipGloss", "paintInfo", "rotation", "layoutId" };
+        static readonly string[] finders_favor = { "hAttribute" };
 
 
         //Charstat(string cname, string dstyle, string pn, int ofst, string ender="")
@@ -69,6 +70,10 @@ namespace HS2CharEdit
         new Charstat("txt_trait", "dec1byte", "trait", 0, "a4"),
         new Charstat("txt_mentality", "dec1byte", "mind", 0, "aa"),
         new Charstat("txt_sextrait", "dec1byte", "hAttribute", 0, "b0"),
+        new Charstat("txt_favor", "dec1byte", "Favor", 0, "a9",finders_favor,"sld_favor"),
+        new Charstat("txt_slavery", "dec1byte", "Slavery", 0, "a6",null,"sld_slavery"),
+        new Charstat("txt_enjoyment", "dec1byte", "Enjoyment", 0, "a8",null,"sld_enjoyment"),
+        new Charstat("txt_aversion", "dec1byte", "Aversion", 0, "a7",null,"sld_aversion"),
         new Charstat("txt_dependence", "dec1byte", "Dependence", 0, "a5",null,"sld_dependence"),
         new Charstat("txt_broken", "dec1byte", "Broken", 0, "a5", null, "sld_broken"),
         new Charstat("txt_voiceRate", "normal", "voiceRate",0,"instance01",null,"sld_voiceRate"), //need to get 2nd instance
@@ -482,6 +487,8 @@ namespace HS2CharEdit
 
             public void LoadData(byte[] filebytes)
             {
+                int starthere = 0;
+
                 //string to search for
                 byte[] searchfor = Encoding.ASCII.GetBytes(propName);
 
@@ -490,9 +497,10 @@ namespace HS2CharEdit
                 {
                     //find position of the marker to start reading from
                     byte[] marker = Encoding.ASCII.GetBytes(findfirst[i]);
-                    int starthere = Search(filebytes, marker);
+                    starthere = Search(filebytes, marker);
                     //look at bytes starting from there for the first instance
-                    filebytes = filebytes.Skip(starthere + findfirst[i].Length).ToArray();
+                    //filebytes = filebytes.Skip(starthere + findfirst[i].Length).ToArray();
+                    //actually no thats stupid, send the position to the search function instead
 
                 }
 
@@ -508,11 +516,12 @@ namespace HS2CharEdit
                 }
 
                 string hexStr = "";
+
                 switch (datastyle)
                 {
                     case "dec1byte":
                         {
-                            pos = Search(filebytes, searchfor,instance) + propName.Length + offset;
+                            pos = Search(filebytes, searchfor, instance, starthere) + propName.Length + offset;
 
                             string curstring;
                             byte[] current;
@@ -527,7 +536,7 @@ namespace HS2CharEdit
                     case "fullname":
                     case "hex":
                         {
-                            pos = Search(filebytes, searchfor) + propName.Length + offset;
+                            pos = Search(filebytes, searchfor, 0, starthere) + propName.Length + offset;
                             int oldpos = pos;
 
                             string curstring = "";
@@ -576,7 +585,7 @@ namespace HS2CharEdit
                             idx = Int32.Parse(end);
                      
                             //find position of the stat in question
-                            pos = Search(filebytes, searchfor) + propName.Length + offset + 1 + (idx * 5); //+1 for the delimiter character; +5 to get to the next color value
+                            pos = Search(filebytes, searchfor, 0, starthere) + propName.Length + offset + 1 + (idx * 5); //+1 for the delimiter character; +5 to get to the next color value
 
                             //get bytes[] at position
                             var hexNum = filebytes.Skip(pos).Take(4).ToArray();
@@ -609,7 +618,7 @@ namespace HS2CharEdit
                     case "normal":
                         {
                             //find position of the stat in question
-                            pos = Search(filebytes, searchfor, instance) + propName.Length + offset + 1; //+1 for the delimiter character
+                            pos = Search(filebytes, searchfor, instance, starthere) + propName.Length + offset + 1; //+1 for the delimiter character
 
                             //get bytes[] at position
                             var hexNum = filebytes.Skip(pos).Take(4).ToArray();
@@ -972,17 +981,48 @@ namespace HS2CharEdit
             string sdrname = ((Slider)sender).Name;
 
             //change txtbox value
+            SliderToText(sdrname, data);
+
+        }
+
+        private void Slider_KeyUp(object sender, KeyboardEventArgs e)
+        {
+            //get data
+            double dval = ((Slider)sender).Value;
+            int val = (int)Math.Round(dval);
+            string data = val.ToString();
+            string sdrname = ((Slider)sender).Name;
+
+            //change txtbox value
+            SliderToText(sdrname, data);
+
+        }
+
+        public void SliderToText(string sdrname, string data)
+        {
+
+            //change txtbox value
 
             for (var i = 0; i < allstats.Length; i++)
             {
                 if (allstats[i].slidername == sdrname)
                 {
-                   // MessageBox.Show(data);
+                    //put data in textbox control - not strictly necessary but good practice
                     TextBox? textBox = this.FindName(allstats[i].controlname) as TextBox;
-                    if(textBox!=null)
+                    if (textBox != null)
                     {
                         textBox.Text = data;
                     }
+
+                    //put same data into the display label if it exists
+                    string lblname = "dis_" + sdrname;
+                    Label? thelabel = this.FindName(lblname) as Label;
+                    if (thelabel != null)
+                    {
+                        thelabel.Content = data;
+                    }
+
+                    //update memory copy of the data
                     allstats[i].Update(data);
                     break;
                 }
@@ -992,6 +1032,7 @@ namespace HS2CharEdit
         public void TextToSlider(object sender, TextChangedEventArgs e)
         {
             string boxname = ((TextBox)sender).Name;
+            string boxtext = ((TextBox)sender).Text;
             for (var i = 0; i < allstats.Length; i++)
             {
                 if (allstats[i].controlname == boxname)
@@ -1001,7 +1042,15 @@ namespace HS2CharEdit
                     Slider? theSlider = this.FindName(slidername) as Slider;
                     if (theSlider != null)
                     {
-                        theSlider.Value = int.Parse(((TextBox)sender).Text);
+                        theSlider.Value = int.Parse(boxtext);
+                    }
+
+                    //put same data into the display label if it exists
+                    string lblname = "dis_" + slidername;
+                    Label? thelabel = this.FindName(lblname) as Label;
+                    if (thelabel != null)
+                    {
+                        thelabel.Content = boxtext;
                     }
                     break;
                 }
@@ -1264,11 +1313,11 @@ namespace HS2CharEdit
             }
         }
 
-        static int Search(byte[] src, byte[] pattern, int occurrence = 0)
+        static int Search(byte[] src, byte[] pattern, int occurrence = 0, int starthere = 0)
         {
             int timesfound = 0;
             int maxFirstCharSlot = src.Length - pattern.Length + 1;
-            for (int i = 0; i < maxFirstCharSlot; i++)
+            for (int i = starthere; i < maxFirstCharSlot; i++)
             {
                 if (src[i] != pattern[0]) // compare only first byte
                     continue;

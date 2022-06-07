@@ -162,12 +162,12 @@
             <TabItem Header="Character">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="81"/>
-                        <ColumnDefinition Width="19"/>
+                        <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="45"/>
+                        <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="45"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Name" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="1"/>
                     <!-- PreviewTextInput="TextBox" -->
@@ -179,7 +179,7 @@
                         TextWrapping="Wrap" VerticalAlignment="Top" Width="150"
                         MouseDoubleClick="SelectAddress"
                         GotKeyboardFocus="SelectAddress"
-                        PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="2" Grid.ColumnSpan="2" Margin="0,9,0,0" 
+                        PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,9,0,0" 
                             
                     />
                     <Label Content="Birth Month" HorizontalAlignment="Left" Margin="5,38,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="1"/>
@@ -237,8 +237,8 @@
                         SelectionChanged="dropSelectChanged"
                         SelectedValuePath="Content"
                         HorizontalAlignment="Left" Height="25"
-                         VerticalAlignment="Top" Width="60"
-                        Grid.Column="2"  Margin="0,39,0,0" 
+                         VerticalAlignment="Top" Width="100"
+                        Grid.Column="1"  Margin="0,39,0,0" 
                         >
                         <ComboBoxItem Content="01 Jan"></ComboBoxItem>
                         <ComboBoxItem Content="02 Feb"></ComboBoxItem>
@@ -258,8 +258,8 @@
                         SelectionChanged="dropSelectChanged"
                         SelectedValuePath="Content"                              
                         HorizontalAlignment="Left" Height="25"
-                         VerticalAlignment="Top" Width="60"
-                        Grid.Column="2"  Margin="0,69,0,0" 
+                         VerticalAlignment="Top" Width="100"
+                        Grid.Column="1"  Margin="0,69,0,0" 
                         >
                         <ComboBoxItem Content="01" />
                         <ComboBoxItem Content="02" />
@@ -306,6 +306,7 @@
                                 />
                     <Button x:Name="btn_editName" IsEnabled="False" Grid.Column="4" Content="Edit" Visibility="Hidden" HorizontalAlignment="Left" Height="20" Margin="6,9,0,0" VerticalAlignment="Top" Width="110" Click="btn_editName_Click" Grid.ColumnSpan="2"/>
                     <Label Content="Voice Pitch" HorizontalAlignment="Left" Margin="5,98,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="1"/>
+                    <Label x:Name="dis_sld_voiceRate" Content="0" HorizontalAlignment="Left" Margin="5,98,0,0" VerticalAlignment="Top"  Grid.Column="2" Grid.ColumnSpan="1"/>
                     <TextBox 
                                     x:Name="txt_voiceRate" 
                                     IsReadOnly="True" 
@@ -320,12 +321,13 @@
                                 />
                     <Slider x:Name="sld_voiceRate" 
                             HorizontalAlignment="Center" 
-                            Margin="0,99,0,0"  VerticalAlignment="Top" 
+                            Margin="0,103,0,0"  VerticalAlignment="Top" 
                             Width="100" Maximum="200" Minimum="-100"
                             Thumb.DragCompleted="Slider_DragCompleted"
+                            KeyUp="Slider_KeyUp"
                             AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0"
                             TickFrequency="1" IsSnapToTickEnabled="True"
-                            Grid.Column="2"
+                            Grid.Column="1"
                             />
                     <Label Content="Personality" HorizontalAlignment="Left" Margin="5,128,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="1"/>
                     <ComboBox x:Name="cbo_personality" Margin="0,129,0,0"
@@ -333,7 +335,7 @@
                         SelectedValuePath="Content"
                         HorizontalAlignment="Center" Height="25"
                          VerticalAlignment="Top" Width="100"
-                        Grid.Column="2"   
+                        Grid.Column="1"   
                         >
                         <ComboBoxItem Content="Composed"></ComboBoxItem>
                         <ComboBoxItem Content="Normal"></ComboBoxItem>
@@ -357,7 +359,7 @@
                         SelectedValuePath="Content"
                         HorizontalAlignment="Center" Height="25"
                          VerticalAlignment="Top" Width="100"
-                        Grid.Column="2"   
+                        Grid.Column="1"   
                         >
                         <ComboBoxItem Content="None"></ComboBoxItem>
                         <ComboBoxItem Content="Clean Lover"></ComboBoxItem>
@@ -381,7 +383,7 @@
                         SelectedValuePath="Content"
                         HorizontalAlignment="Center" Height="25"
                          VerticalAlignment="Top" Width="100"
-                        Grid.Column="2"   
+                        Grid.Column="1"   
                         >
                         <ComboBoxItem Content="None"></ComboBoxItem>
                         <ComboBoxItem Content="Curious"></ComboBoxItem>
@@ -405,7 +407,7 @@
                         SelectedValuePath="Content"
                         HorizontalAlignment="Center" Height="25"
                          VerticalAlignment="Top" Width="100"
-                        Grid.Column="2"   
+                        Grid.Column="1"   
                         >
                         <ComboBoxItem Content="None"></ComboBoxItem>
                         <ComboBoxItem Content="Horny"></ComboBoxItem>
@@ -421,51 +423,158 @@
 
                     </ComboBox>
 
-                    <Label Content="Broken" Visibility="Hidden" HorizontalAlignment="Left" Margin="5,188,0,0" VerticalAlignment="Top"  Grid.Column="4" Grid.ColumnSpan="1"/>
+                    <!-- ______________Favor_________________________ -->
+                    <Label Content="Aversion" HorizontalAlignment="Left" 
+                           Margin="5,68,0,0" 
+                           VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
 
-                    <TextBox 
-                                    x:Name="txt_broken" Visibility="Hidden"
+                    <TextBox x:Name="txt_aversion" 
                                     IsReadOnly="True" TextChanged="TextToSlider"
                                     HorizontalAlignment="Left" Height="20" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
                                     MouseDoubleClick="SelectAddress"
                                     GotKeyboardFocus="SelectAddress"
-                                    Margin="5,223,0,0"
-                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="5"
+                                    Margin="5,73,0,0"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="4"
+                            
+                                />
+                    <Slider x:Name="sld_aversion" 
+                            Grid.Column="4" HorizontalAlignment="Center" 
+                            Margin="0,73,0,0" VerticalAlignment="Top" 
+                            Width="100" Maximum="100"
+                            Thumb.DragCompleted="Slider_DragCompleted"
+                            KeyUp="Slider_KeyUp"
+                            AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0"
+                            TickFrequency="1" IsSnapToTickEnabled="True"
+                            />
+                    <Label x:Name="dis_sld_aversion" Content="0" HorizontalAlignment="Left" Margin="5,68,0,0" VerticalAlignment="Top"  Grid.Column="5" Grid.ColumnSpan="1"/>
+
+                    <!-- ______________Favor_________________________ -->
+                    <Label Content="Enjoyment" HorizontalAlignment="Left" 
+                           Margin="5,98,0,0" 
+                           VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
+
+                    <TextBox x:Name="txt_enjoyment" 
+                                    IsReadOnly="True" TextChanged="TextToSlider"
+                                    HorizontalAlignment="Left" Height="20" 
+                                    TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                                    MouseDoubleClick="SelectAddress"
+                                    GotKeyboardFocus="SelectAddress"
+                                    Margin="5,103,0,0"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="4"
+                            
+                                />
+                    <Slider x:Name="sld_enjoyment" 
+                            Grid.Column="4" HorizontalAlignment="Center" 
+                            Margin="0,103,0,0" VerticalAlignment="Top" 
+                            Width="100" Maximum="100"
+                            Thumb.DragCompleted="Slider_DragCompleted"
+                            KeyUp="Slider_KeyUp"
+                            AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0"
+                            TickFrequency="1" IsSnapToTickEnabled="True"
+                            />
+                    <Label x:Name="dis_sld_enjoyment" Content="0" HorizontalAlignment="Left" Margin="5,98,0,0" VerticalAlignment="Top"  Grid.Column="5" Grid.ColumnSpan="1"/>
+
+                    <!-- ______________Favor_________________________ -->
+                    <Label Content="Favor" HorizontalAlignment="Left" 
+                           Margin="5,128,0,0" 
+                           VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
+
+                    <TextBox x:Name="txt_favor" 
+                                    IsReadOnly="True" TextChanged="TextToSlider"
+                                    HorizontalAlignment="Left" Height="20" 
+                                    TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                                    MouseDoubleClick="SelectAddress"
+                                    GotKeyboardFocus="SelectAddress"
+                                    Margin="5,133,0,0"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="4"
+                            
+                                />
+                    <Slider x:Name="sld_favor" 
+                            Grid.Column="4" HorizontalAlignment="Center" 
+                            Margin="0,133,0,0" VerticalAlignment="Top" 
+                            Width="100" Maximum="100"
+                            Thumb.DragCompleted="Slider_DragCompleted"
+                            KeyUp="Slider_KeyUp"
+                            AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0"
+                            TickFrequency="1" IsSnapToTickEnabled="True"
+                            />
+                    <Label x:Name="dis_sld_favor" Content="0" HorizontalAlignment="Left" Margin="5,128,0,0" VerticalAlignment="Top"  Grid.Column="5" Grid.ColumnSpan="1"/>
+                    <!-- ______________Slavery__________________________ -->
+                    <Label Content="Slavery" HorizontalAlignment="Left" 
+                           Margin="5,158,0,0" 
+                           VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
+
+                    <TextBox x:Name="txt_slavery" 
+                                    IsReadOnly="True" TextChanged="TextToSlider"
+                                    HorizontalAlignment="Left" Height="20" 
+                                    TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                                    MouseDoubleClick="SelectAddress"
+                                    GotKeyboardFocus="SelectAddress"
+                                    Margin="5,163,0,0"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="4"
+                            
+                                />
+                    <Slider x:Name="sld_slavery" 
+                            Grid.Column="4" HorizontalAlignment="Center" 
+                            Margin="0,163,0,0" VerticalAlignment="Top" 
+                            Width="100" Maximum="100"
+                            Thumb.DragCompleted="Slider_DragCompleted"
+                            KeyUp="Slider_KeyUp"
+                            AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0"
+                            TickFrequency="1" IsSnapToTickEnabled="True"
+                            />
+                    <Label x:Name="dis_sld_slavery" Content="0" HorizontalAlignment="Left" Margin="5,158,0,0" VerticalAlignment="Top"  Grid.Column="5" Grid.ColumnSpan="1"/>
+
+                    <!-- ______________Broken__________________________ -->
+                    <Label Content="Broken" HorizontalAlignment="Left" 
+                           Margin="5,188,0,0" 
+                           VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
+
+                    <TextBox x:Name="txt_broken" 
+                                    IsReadOnly="True" TextChanged="TextToSlider"
+                                    HorizontalAlignment="Left" Height="20" 
+                                    TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
+                                    MouseDoubleClick="SelectAddress"
+                                    GotKeyboardFocus="SelectAddress"
+                                    Margin="5,193,0,0"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="4"
                             
                                 />
                     <Slider x:Name="sld_broken" 
-                            Visibility="Hidden"
-                            Grid.Column="5" HorizontalAlignment="Center" 
+                            Grid.Column="4" HorizontalAlignment="Center" 
                             Margin="0,193,0,0" VerticalAlignment="Top" 
                             Width="100" Maximum="100"
                             Thumb.DragCompleted="Slider_DragCompleted"
+                            KeyUp="Slider_KeyUp"
                             AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0"
                             TickFrequency="1" IsSnapToTickEnabled="True"
                             />
-
-                    <Label Content="Dependence" Visibility="Hidden" HorizontalAlignment="Left" Margin="5,218,0,0" VerticalAlignment="Top"  Grid.Column="4" Grid.ColumnSpan="1"/>
+                    <Label x:Name="dis_sld_broken" Content="0" HorizontalAlignment="Left" Margin="5,188,0,0" VerticalAlignment="Top"  Grid.Column="5" Grid.ColumnSpan="1"/>
+<!-- _______________Dependence_________________________ -->
+                    <Label Content="Dependence" HorizontalAlignment="Left" Margin="5,218,0,0" VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
 
                     <TextBox 
-                                    x:Name="txt_dependence" Visibility="Hidden"
+                                    x:Name="txt_dependence"
                                     IsReadOnly="True" TextChanged="TextToSlider"
                                     HorizontalAlignment="Left" Height="20" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
                                     MouseDoubleClick="SelectAddress"
                                     GotKeyboardFocus="SelectAddress"
                                     Margin="5,223,0,0"
-                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="5"
+                                    PreviewMouseLeftButtonDown="SelectivelyIgnoreMouseButton" Grid.Column="4"
                             
                                 />
                     <Slider x:Name="sld_dependence" 
-                            Visibility="Hidden"
-                            Grid.Column="5" HorizontalAlignment="Center" 
+                            Grid.Column="4" HorizontalAlignment="Center" 
                             Margin="0,223,0,0" VerticalAlignment="Top" 
                             Width="100" Maximum="100"
                             Thumb.DragCompleted="Slider_DragCompleted"
+                            KeyUp="Slider_KeyUp"
                             AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0"
                             TickFrequency="1" IsSnapToTickEnabled="True"
                             />
+                    <Label x:Name="dis_sld_dependence" Content="0" HorizontalAlignment="Left" Margin="5,218,0,0" VerticalAlignment="Top"  Grid.Column="5" Grid.ColumnSpan="1"/>
 
                 </Grid>
             </TabItem>
