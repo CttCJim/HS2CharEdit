@@ -13,3 +13,6 @@ To save, use the save icon. This will create a new card with any changes you've 
 This app is presented as-is and the author assumes no liability for mishaps.
 
 For news, devlog, and to support development, visit https://www.patreon.com/CttCJim
+
+
+REQUIREMENTS: .NET 6.0 (x64)
