@@ -23,6 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="dictionary.ico" />
     <None Remove="Digital-Patreon-Logo_FieryCoral.png" />
     <None Remove="Digital-Patreon-Wordmark_FieryCoral.png" />
     <None Remove="imagefile.ico" />
@@ -42,6 +43,7 @@
       <PackagePath>\</PackagePath>
     </None>
     <PackageReference Include="Octokit" Version="0.51.0" />
+    <Resource Include="dictionary.ico" />
     <Resource Include="Digital-Patreon-Logo_FieryCoral.png" />
     <Resource Include="imagefile.ico" />
     <Resource Include="pplogo.png" />

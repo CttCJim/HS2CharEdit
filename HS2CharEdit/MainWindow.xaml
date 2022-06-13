@@ -134,12 +134,18 @@
                     </Button.Background>
                 </Button>
                 <Separator />
-                <Button Height="30" Width="30" Margin="5,0,5,0" ToolTip="Revert Image" Click="btn_Patreon_Click" Style="{DynamicResource Button_NoHover_borderless}">
+                <Button Height="30" Width="30" Margin="5,0,5,0" ToolTip="Switch Translations" Click="Btn_SteamTrans_Click" Style="{DynamicResource Button_NoHover_borderless}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/dictionary.ico" Stretch="Fill"/>
+                    </Button.Background>
+                </Button>
+                <Separator />
+                <Button Height="30" Width="30" Margin="5,0,5,0" ToolTip="Support the developer on Patreon" Click="btn_Patreon_Click" Style="{DynamicResource Button_NoHover_borderless}">
                     <Button.Background>
                         <ImageBrush ImageSource="/Digital-Patreon-Logo_FieryCoral.png" Stretch="Fill"/>
                     </Button.Background>
                 </Button>
-                <Button Height="30" Width="30" Margin="5,0,5,0" ToolTip="Revert Image" Click="btn_Paypal_Click" Style="{DynamicResource Button_NoHover_borderless}">
+                <Button Height="30" Width="30" Margin="5,0,5,0" ToolTip="Support the developer via PayPal" Click="btn_Paypal_Click" Style="{DynamicResource Button_NoHover_borderless}">
                     <Button.Background>
                         <ImageBrush ImageSource="pplogo.png" Stretch="Fill"/>
                     </Button.Background>
@@ -240,18 +246,18 @@
                          VerticalAlignment="Top" Width="100"
                         Grid.Column="1"  Margin="0,39,0,0" 
                         >
-                        <ComboBoxItem Content="01 Jan"></ComboBoxItem>
-                        <ComboBoxItem Content="02 Feb"></ComboBoxItem>
-                        <ComboBoxItem Content="03 Mar"></ComboBoxItem>
-                        <ComboBoxItem Content="04 Apr"></ComboBoxItem>
-                        <ComboBoxItem Content="05 May"></ComboBoxItem>
-                        <ComboBoxItem Content="06 Jun"></ComboBoxItem>
-                        <ComboBoxItem Content="07 Jul"></ComboBoxItem>
-                        <ComboBoxItem Content="08 Aug"></ComboBoxItem>
-                        <ComboBoxItem Content="09 Sep"></ComboBoxItem>
-                        <ComboBoxItem Content="10 Oct"></ComboBoxItem>
-                        <ComboBoxItem Content="11 Nov"></ComboBoxItem>
-                        <ComboBoxItem Content="12 Dec"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_month_0" Content="01 Jan"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_month_1" Content="02 Feb"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_month_2" Content="03 Mar"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_month_3" Content="04 Apr"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_month_4" Content="05 May"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_month_5" Content="06 Jun"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_month_6" Content="07 Jul"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_month_7" Content="08 Aug"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_month_8" Content="09 Sep"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_month_9" Content="10 Oct"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_month_10" Content="11 Nov"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_month_12" Content="12 Dec"></ComboBoxItem>
                     </ComboBox>
 
                     <ComboBox x:Name="cbo_day" 
@@ -337,20 +343,20 @@
                          VerticalAlignment="Top" Width="100"
                         Grid.Column="1"   
                         >
-                        <ComboBoxItem Content="Composed"></ComboBoxItem>
-                        <ComboBoxItem Content="Normal"></ComboBoxItem>
-                        <ComboBoxItem Content="Hardworking"></ComboBoxItem>
-                        <ComboBoxItem Content="Girlfriend"></ComboBoxItem>
-                        <ComboBoxItem Content="Fashionable"></ComboBoxItem>
-                        <ComboBoxItem Content="Timid"></ComboBoxItem>
-                        <ComboBoxItem Content="Motherly"></ComboBoxItem>
-                        <ComboBoxItem Content="Sadistic"></ComboBoxItem>
-                        <ComboBoxItem Content="Open-Minded"></ComboBoxItem>
-                        <ComboBoxItem Content="Airhead"></ComboBoxItem>
-                        <ComboBoxItem Content="Careful"></ComboBoxItem>
-                        <ComboBoxItem Content="Ideal Japanese"></ComboBoxItem>
-                        <ComboBoxItem Content="Tomboy"></ComboBoxItem>
-                        <ComboBoxItem Content="Obsessed"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_0" Content="Composed"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_1" Content="Normal"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_2" Content="Hardworking"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_3" Content="Girlfriend"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_4" Content="Fashionable"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_5" Content="Timid"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_6" Content="Motherly"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_7" Content="Sadistic"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_8" Content="Open-Minded"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_9" Content="Airhead"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_10" Content="Careful"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_11" Content="Ideal Japanese"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_12" Content="Tomboy"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_personality_13" Content="Obsessed"></ComboBoxItem>
                     </ComboBox>
 
                     <Label Content="Trait" HorizontalAlignment="Left" Margin="5,158,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="1"/>
@@ -361,19 +367,19 @@
                          VerticalAlignment="Top" Width="100"
                         Grid.Column="1"   
                         >
-                        <ComboBoxItem Content="None"></ComboBoxItem>
-                        <ComboBoxItem Content="Clean Lover"></ComboBoxItem>
-                        <ComboBoxItem Content="Lazy"></ComboBoxItem>
-                        <ComboBoxItem Content="Fragile"></ComboBoxItem>
-                        <ComboBoxItem Content="Tough"></ComboBoxItem>
-                        <ComboBoxItem Content="Weak Bladder"></ComboBoxItem>
-                        <ComboBoxItem Content="Patient"></ComboBoxItem>
-                        <ComboBoxItem Content="Glass Heart"></ComboBoxItem>
-                        <ComboBoxItem Content="Brave"></ComboBoxItem>
-                        <ComboBoxItem Content="Perverted"></ComboBoxItem>
-                        <ComboBoxItem Content="Self-Control"></ComboBoxItem>
-                        <ComboBoxItem Content="At Will"></ComboBoxItem>
-                        <ComboBoxItem Content="Sensitive"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_0" Content="None"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_1" Content="Clean Lover"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_2" Content="Lazy"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_3" Content="Fragile"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_4" Content="Tough"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_5" Content="Weak Bladder"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_6" Content="Patient"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_7" Content="Glass Heart"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_8" Content="Brave"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_9" Content="Perverted"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_10" Content="Self-Control"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_11" Content="At Will"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_trait_12" Content="Sensitive"></ComboBoxItem>
                     </ComboBox>
 
 
@@ -385,19 +391,19 @@
                          VerticalAlignment="Top" Width="100"
                         Grid.Column="1"   
                         >
-                        <ComboBoxItem Content="None"></ComboBoxItem>
-                        <ComboBoxItem Content="Curious"></ComboBoxItem>
-                        <ComboBoxItem Content="Affectionate"></ComboBoxItem>
-                        <ComboBoxItem Content="Lovestruck"></ComboBoxItem>
-                        <ComboBoxItem Content="Awkward"></ComboBoxItem>
-                        <ComboBoxItem Content="Reluctant"></ComboBoxItem>
-                        <ComboBoxItem Content="Loathing"></ComboBoxItem>
-                        <ComboBoxItem Content="Cooperative"></ComboBoxItem>
-                        <ComboBoxItem Content="Obedient"></ComboBoxItem>
-                        <ComboBoxItem Content="Submissive"></ComboBoxItem>
-                        <ComboBoxItem Content="Interested"></ComboBoxItem>
-                        <ComboBoxItem Content="Charmed"></ComboBoxItem>
-                        <ComboBoxItem Content="Aroused"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_0" Content="None"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_1" Content="Curious"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_2" Content="Affectionate"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_3" Content="Lovestruck"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_4" Content="Awkward"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_5" Content="Reluctant"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_6" Content="Loathing"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_7" Content="Cooperative"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_8" Content="Obedient"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_9" Content="Submissive"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_10" Content="Interested"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_11" Content="Charmed"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_mentality_12" Content="Aroused"></ComboBoxItem>
                     </ComboBox>
 
 
@@ -409,26 +415,26 @@
                          VerticalAlignment="Top" Width="100"
                         Grid.Column="1"   
                         >
-                        <ComboBoxItem Content="None"></ComboBoxItem>
-                        <ComboBoxItem Content="Horny"></ComboBoxItem>
-                        <ComboBoxItem Content="Sadist"></ComboBoxItem>
-                        <ComboBoxItem Content="Masochist"></ComboBoxItem>
-                        <ComboBoxItem Content="Sensitive Breasts"></ComboBoxItem>
-                        <ComboBoxItem Content="Sensitive Ass"></ComboBoxItem>
-                        <ComboBoxItem Content="Sensitive Pussy"></ComboBoxItem>
-                        <ComboBoxItem Content="Love Kisses"></ComboBoxItem>
-                        <ComboBoxItem Content="Clean Freak"></ComboBoxItem>
-                        <ComboBoxItem Content="Sex Hater"></ComboBoxItem>
-                        <ComboBoxItem Content="Lonely"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_sextrait_0" Content="None"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_sextrait_1" Content="Horny"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_sextrait_2" Content="Sadist"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_sextrait_3" Content="Masochist"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_sextrait_4" Content="Sensitive Breasts"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_sextrait_5" Content="Sensitive Ass"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_sextrait_6" Content="Sensitive Pussy"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_sextrait_7" Content="Love Kisses"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_sextrait_8" Content="Clean Freak"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_sextrait_9" Content="Sex Hater"></ComboBoxItem>
+                        <ComboBoxItem x:Name="cbo_sextrait_10" Content="Lonely"></ComboBoxItem>
 
                     </ComboBox>
 
                     <!-- ______________Favor_________________________ -->
                     <Label Content="Aversion" HorizontalAlignment="Left" 
-                           Margin="5,68,0,0" 
+                           Margin="0,68,0,0" 
                            VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
 
-                    <TextBox x:Name="txt_aversion" 
+                    <TextBox x:Name="txt_aversion"  Visibility="Hidden"
                                     IsReadOnly="True" TextChanged="TextToSlider"
                                     HorizontalAlignment="Left" Height="20" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
@@ -451,10 +457,10 @@
 
                     <!-- ______________Favor_________________________ -->
                     <Label Content="Enjoyment" HorizontalAlignment="Left" 
-                           Margin="5,98,0,0" 
+                           Margin="0,98,0,0" 
                            VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
 
-                    <TextBox x:Name="txt_enjoyment" 
+                    <TextBox x:Name="txt_enjoyment"  Visibility="Hidden"
                                     IsReadOnly="True" TextChanged="TextToSlider"
                                     HorizontalAlignment="Left" Height="20" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
@@ -477,10 +483,10 @@
 
                     <!-- ______________Favor_________________________ -->
                     <Label Content="Favor" HorizontalAlignment="Left" 
-                           Margin="5,128,0,0" 
+                           Margin="0,128,0,0" 
                            VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
 
-                    <TextBox x:Name="txt_favor" 
+                    <TextBox x:Name="txt_favor"  Visibility="Hidden"
                                     IsReadOnly="True" TextChanged="TextToSlider"
                                     HorizontalAlignment="Left" Height="20" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
@@ -491,6 +497,7 @@
                             
                                 />
                     <Slider x:Name="sld_favor" 
+                            
                             Grid.Column="4" HorizontalAlignment="Center" 
                             Margin="0,133,0,0" VerticalAlignment="Top" 
                             Width="100" Maximum="100"
@@ -502,10 +509,11 @@
                     <Label x:Name="dis_sld_favor" Content="0" HorizontalAlignment="Left" Margin="5,128,0,0" VerticalAlignment="Top"  Grid.Column="5" Grid.ColumnSpan="1"/>
                     <!-- ______________Slavery__________________________ -->
                     <Label Content="Slavery" HorizontalAlignment="Left" 
-                           Margin="5,158,0,0" 
+                           Margin="0,158,0,0" 
                            VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
 
                     <TextBox x:Name="txt_slavery" 
+                             Visibility="Hidden"
                                     IsReadOnly="True" TextChanged="TextToSlider"
                                     HorizontalAlignment="Left" Height="20" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
@@ -528,10 +536,11 @@
 
                     <!-- ______________Broken__________________________ -->
                     <Label Content="Broken" HorizontalAlignment="Left" 
-                           Margin="5,188,0,0" 
+                           Margin="0,188,0,0" 
                            VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
 
                     <TextBox x:Name="txt_broken" 
+                             Visibility="Hidden"
                                     IsReadOnly="True" TextChanged="TextToSlider"
                                     HorizontalAlignment="Left" Height="20" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
@@ -551,10 +560,11 @@
                             TickFrequency="1" IsSnapToTickEnabled="True"
                             />
                     <Label x:Name="dis_sld_broken" Content="0" HorizontalAlignment="Left" Margin="5,188,0,0" VerticalAlignment="Top"  Grid.Column="5" Grid.ColumnSpan="1"/>
-<!-- _______________Dependence_________________________ -->
-                    <Label Content="Dependence" HorizontalAlignment="Left" Margin="5,218,0,0" VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
+                    <!-- _______________Dependence_________________________ -->
+                    <Label Content="Dependence" HorizontalAlignment="Left" Margin="0,218,0,0" VerticalAlignment="Top"  Grid.Column="3" Grid.ColumnSpan="1"/>
 
                     <TextBox 
+                        Visibility="Hidden"
                                     x:Name="txt_dependence"
                                     IsReadOnly="True" TextChanged="TextToSlider"
                                     HorizontalAlignment="Left" Height="20" 

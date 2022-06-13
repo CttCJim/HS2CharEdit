@@ -30,12 +30,11 @@ namespace HS2CharEdit
     /// Interaction logic for MainWindow.xaml
     /// </summary>
 
-
     public partial class MainWindow : Window
     {
         //globals
         Window mainWindow;
-        string VERSIONNUMBER = "0.2.1.2";
+        string VERSIONNUMBER = "0.2.2.0";
         byte[] pictobytes = Array.Empty<byte>();
         byte[] pictobytes_restore = Array.Empty<byte>();
         byte[] databytes = Array.Empty<byte>();
@@ -1521,6 +1520,190 @@ namespace HS2CharEdit
                 Process.Start("explorer", url);
             }
         }
+
+        private void Btn_SteamTrans_Click(object sender, RoutedEventArgs e)
+        {
+            //flip personality
+            string[] oldset = {
+                "Composed",
+                "Normal",
+                "Hardworking",
+                "Girlfriend",
+                "Fashionable",
+                "Timid",
+                "Motherly",
+                "Sadistic",
+                "Open-Minded",
+                "Airhead",
+                "Careful",
+                "Ideal Japanese",
+                "Tomboy",
+                "Obsessed"
+            };
+            string[] newset = {
+                "Secretary",
+                "Vanilla",
+                "Caregiver",
+                "Girl-Next-Door",
+                "Airhead",
+                "Scaredy Cat",
+                "Mother Figure",
+                "Dominatrix",
+                "Daredevil",
+                "Goofball",
+                "Intellectual",
+                "Japanese Ideal",
+                "Tomboy",
+                "Psycho Stalker"
+            };
+            ComboBoxItem[] items = {
+                cbo_personality_0, cbo_personality_1, cbo_personality_2, cbo_personality_3, cbo_personality_4,
+                cbo_personality_5, cbo_personality_6, cbo_personality_7, cbo_personality_8, cbo_personality_9,
+                cbo_personality_10, cbo_personality_11, cbo_personality_12, cbo_personality_13
+            };
+
+            flipTrans(oldset, newset, items);
+
+            //flip mindset-trait
+            string[] oldset1 = {
+                        "None",
+                        "Clean Lover",
+                        "Lazy",
+                        "Fragile",
+                        "Tough",
+                        "Weak Bladder",
+                        "Patient",
+                        "Glass Heart",
+                        "Brave",
+                        "Perverted",
+                        "Self-Control",
+                        "At Will",
+                        "Sensitive"
+            };
+            string[] newset1 = {
+                        "None",
+                        "Fastidious",
+                        "Lazy",
+                        "Frail",
+                        "Tough",
+                        "Weak Bladder",
+                        "Tenacious",
+                        "Glass Heart",
+                        "Indomitable",
+                        "Pent Up",
+                        "Iron Will",
+                        "Capricious",
+                        "Emotional"
+            };
+
+            ComboBoxItem[] items1 = {
+                cbo_trait_0,cbo_trait_1,cbo_trait_2,cbo_trait_3,cbo_trait_4,
+               cbo_trait_5,cbo_trait_6,cbo_trait_7,cbo_trait_8,cbo_trait_9,
+               cbo_trait_10,cbo_trait_11,cbo_trait_12
+            };
+
+            flipTrans(oldset1, newset1, items1);
+
+            //flip mindset-mentality
+            string[] oldset2 = {
+                "None",
+                "Curious",
+                "Affectionate",
+                "Lovestruck",
+                "Awkward",
+                "Reluctant",
+                "Loathing",
+                "Cooperative",
+                "Obedient",
+                "Submissive",
+                "Interested",
+                "Charmed",
+                "Aroused"
+            };
+            string[] newset2 = {
+                "None",
+                "Interested",
+                "Likes You?",
+                "Love at First Sight",
+                "Awkward",
+                "Dislike",
+                "Disgust",
+                "Wants Suggestions",
+                "Dominate Me",
+                "Obedient",
+                "Fun-Loving",
+                "Hurt Me",
+                "Obey Me"
+            };
+            ComboBoxItem[] items2 = {
+                cbo_mentality_0,cbo_mentality_1,cbo_mentality_2,cbo_mentality_3,cbo_mentality_4,
+               cbo_mentality_5,cbo_mentality_6,cbo_mentality_7,cbo_mentality_8,cbo_mentality_9,
+               cbo_mentality_10,cbo_mentality_11,cbo_mentality_12
+            };
+
+            flipTrans(oldset2, newset2, items2);
+
+            //flip mindset-sextrait
+            string[] oldset3 = {
+                "None",
+                "Horny",
+                "Sadist",
+                "Masochist",
+                "Sensitive Breasts",
+                "Sensitive Ass",
+                "Sensitive Pussy",
+                "Love Kisses",
+                "Clean Freak",
+                "Sex Hater",
+                "Lonely"
+            };
+            string[] newset3 = {
+                "None",
+                "Lusty",
+                "S(adist)",
+                "M(asochist)",
+                "Sensitive Breasts",
+                "Sensitive Ass",
+                "Sensitive Groin",
+                "Likes Kisses",
+                "Clean Freak",
+                "Sexually Cautious",
+                "Lonely"
+            };
+            ComboBoxItem[] items3 = {
+                cbo_sextrait_0,cbo_sextrait_1,cbo_sextrait_2,cbo_sextrait_3,cbo_sextrait_4,
+                cbo_sextrait_5,cbo_sextrait_6,cbo_sextrait_7,cbo_sextrait_8,cbo_sextrait_9,
+                cbo_sextrait_10
+            };
+
+            flipTrans(oldset3, newset3, items3);
+        }
+
+        private void flipTrans(string[] set1, string[] set2, ComboBoxItem[] items)
+        {
+            string[] personalityset;
+
+            //get personality set
+            if (items[1] != null)
+            {
+                ComboBoxItem it = items[1];
+                if ((string)it.Content == set1[1])
+                {
+                    personalityset = set2;
+                }
+                else
+                {
+                    personalityset = set1;
+                }
+            }
+            else { return; }
+
+            for (int i = 0; i < personalityset.Length; i++)
+            {
+                items[i].Content = personalityset[i];
+            }
+        }
+
 
         private void btn_Patreon_Click(object sender, RoutedEventArgs e)
         {
