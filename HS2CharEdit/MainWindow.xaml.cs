@@ -34,7 +34,7 @@ namespace HS2CharEdit
     {
         //globals
         Window mainWindow;
-        string VERSIONNUMBER = "0.2.2.0";
+        string VERSIONNUMBER = "0.2.2.1";
         byte[] pictobytes = Array.Empty<byte>();
         byte[] pictobytes_restore = Array.Empty<byte>();
         byte[] databytes = Array.Empty<byte>();
@@ -719,7 +719,7 @@ namespace HS2CharEdit
                 ((MainWindow)Application.Current.MainWindow).SaveData(content, pos, edr);
                 if(datastyle=="fullname")
                 {
-                    //length may have changed. update lositions of all variables by loading them from the copy in memory.
+                    //length may have changed. update positions of all variables by loading them from the copy in memory.
                     ((MainWindow)Application.Current.MainWindow).updateAll();
                 }
             }

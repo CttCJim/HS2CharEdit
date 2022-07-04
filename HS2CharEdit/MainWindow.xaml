@@ -1085,7 +1085,8 @@
                             <Label Content="Skin" HorizontalAlignment="Left" Margin="4,3,0,0" VerticalAlignment="Top"  Grid.ColumnSpan="3"/>
                             <TextBox 
                                     x:Name="txt_skinType" 
-                                    IsReadOnly="True" LostFocus="CheckNumBox"                                    HorizontalAlignment="Left" Height="20" Margin="55,9,0,0" 
+                                    IsReadOnly="True" TextChanged="statChanged"
+                                    HorizontalAlignment="Left" Height="20" Margin="55,9,0,0" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
                                     MouseDoubleClick="SelectAddress"
                                     GotKeyboardFocus="SelectAddress"
@@ -1095,7 +1096,8 @@
                             <Label Content="Build" HorizontalAlignment="Left" Margin="4,33,0,0" VerticalAlignment="Top"  Grid.ColumnSpan="3"/>
                             <TextBox 
                                     x:Name="txt_skinBuild" 
-                                    IsReadOnly="True" LostFocus="CheckNumBox"                                    HorizontalAlignment="Left" Height="20" Margin="55,39,0,0" 
+                                    IsReadOnly="True" TextChanged="statChanged"
+                                    HorizontalAlignment="Left" Height="20" Margin="55,39,0,0" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
                                     MouseDoubleClick="SelectAddress"
                                     GotKeyboardFocus="SelectAddress"
@@ -1181,7 +1183,8 @@
                             <Label Content="Suntan Type" HorizontalAlignment="Left" Margin="4,3,0,0" VerticalAlignment="Top"  Grid.ColumnSpan="3"/>
                             <TextBox 
                                     x:Name="txt_tanType" 
-                                    IsReadOnly="True" LostFocus="CheckNumBox"                                    HorizontalAlignment="Left" Height="20" Margin="55,9,0,0" 
+                                    IsReadOnly="True" TextChanged="statChanged"
+                                    HorizontalAlignment="Left" Height="20" Margin="55,9,0,0" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
                                     MouseDoubleClick="SelectAddress"
                                     GotKeyboardFocus="SelectAddress"
@@ -1247,7 +1250,7 @@
                             <Label Content="Nipple Type" HorizontalAlignment="Left" Margin="4,3,0,0" VerticalAlignment="Top"  Grid.ColumnSpan="3"/>
                             <TextBox 
                                     x:Name="txt_nipType" 
-                                    IsReadOnly="True" LostFocus="CheckNumBox"                                    HorizontalAlignment="Left" Height="20" Margin="55,9,0,0" 
+                                    IsReadOnly="True" IsEnabled="False" TextChanged="statChanged"                                    HorizontalAlignment="Left" Height="20" Margin="55,9,0,0" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
                                     MouseDoubleClick="SelectAddress"
                                     GotKeyboardFocus="SelectAddress"
@@ -1324,7 +1327,8 @@
                             <Label Content="Hair Type" HorizontalAlignment="Left" Margin="4,3,0,0" VerticalAlignment="Top"  Grid.ColumnSpan="3"/>
                             <TextBox 
                                     x:Name="txt_pubeType" 
-                                    IsReadOnly="True" LostFocus="CheckNumBox"                                    HorizontalAlignment="Left" Height="20" Margin="55,9,0,0" 
+                                    IsReadOnly="True" TextChanged="statChanged" IsEnabled="False"
+                                    HorizontalAlignment="Left" Height="20" Margin="55,9,0,0" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
                                     MouseDoubleClick="SelectAddress"
                                     GotKeyboardFocus="SelectAddress"
@@ -1457,7 +1461,8 @@
                             <Label Content="Type" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0"/>
                             <TextBox 
                                     x:Name="txt_paint1Type" 
-                                    IsReadOnly="True" LostFocus="CheckNumBox"                                    HorizontalAlignment="Left" Height="20"
+                                IsEnabled="False"
+                                    IsReadOnly="True" TextChanged="statChanged"                                    HorizontalAlignment="Left" Height="20"
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
                                     MouseDoubleClick="SelectAddress"
                                     GotKeyboardFocus="SelectAddress"
@@ -1611,7 +1616,9 @@
                             <Label Content="Type" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0"/>
                             <TextBox 
                                     x:Name="txt_paint2Type" 
-                                    IsReadOnly="True" LostFocus="CheckNumBox"                                    HorizontalAlignment="Left" Height="20"
+                                IsEnabled="False"
+                                    IsReadOnly="True" TextChanged="statChanged"
+                                    HorizontalAlignment="Left" Height="20"
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
                                     MouseDoubleClick="SelectAddress"
                                     GotKeyboardFocus="SelectAddress"
@@ -1774,7 +1781,7 @@
                             <Label Content="Contour" HorizontalAlignment="Left" Margin="0,3,0,0" VerticalAlignment="Top"  Grid.ColumnSpan="3"/>
                             <TextBox 
                                     x:Name="txt_headContour" 
-                                    IsReadOnly="True" TextChanged="statChanged" 
+                                    IsReadOnly="True" TextChanged="statChanged" IsEnabled="False"
                                     PreviewTextInput="HexBox" 
                                     HorizontalAlignment="Left" Height="20" Margin="66,7,0,0" 
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
@@ -2618,7 +2625,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Mole Type (ID)" HorizontalAlignment="Left" Margin="0,3,0,0" VerticalAlignment="Top"  Grid.ColumnSpan="3"/>
                             <TextBox 
-                                    x:Name="txt_moleID" 
+                                    x:Name="txt_moleID" IsEnabled="False"
                                     IsReadOnly="True" TextChanged="statChanged" 
                                     PreviewTextInput="HexBox" 
                                     HorizontalAlignment="Left" Height="20" Margin="0,7,0,0" 
@@ -2743,7 +2750,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Iris Type" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="2"/>
                             <TextBox 
-                                    x:Name="txt_leftIrisType" 
+                                    x:Name="txt_leftIrisType" IsEnabled="False"
                                     IsReadOnly="True" TextChanged="statChanged" 
                                     PreviewTextInput="HexBox" 
                                     HorizontalAlignment="Left" Height="20"
@@ -2833,7 +2840,7 @@
 
                             <Label Content="Pupil Type" HorizontalAlignment="Left" Margin="4,243,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="2"/>
                             <TextBox 
-                            x:Name="txt_leftPupilType" 
+                            x:Name="txt_leftPupilType" IsEnabled="False"
                             IsReadOnly="True" TextChanged="statChanged" 
                             PreviewTextInput="HexBox" 
                             HorizontalAlignment="Left" Height="20" Margin="0,249,0,0" 
@@ -3057,7 +3064,7 @@
 
                             <Label Content="Pupil Type" HorizontalAlignment="Left" Margin="4,243,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="2"/>
                             <TextBox 
-                            x:Name="txt_rightPupilType" 
+                            x:Name="txt_rightPupilType" IsEnabled="False"
                             IsReadOnly="True" TextChanged="statChanged" 
                             PreviewTextInput="HexBox" 
                             HorizontalAlignment="Left" Height="20" Margin="0,249,0,0" 
@@ -3221,7 +3228,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Type" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="2"/>
                             <TextBox 
-                                    x:Name="txt_hlType" 
+                                    x:Name="txt_hlType" IsEnabled="False"
                                     IsReadOnly="True" TextChanged="statChanged" 
                                     PreviewTextInput="HexBox" 
                                     HorizontalAlignment="Left" Height="20"
@@ -3344,7 +3351,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Type" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="2"/>
                             <TextBox 
-                                    x:Name="txt_eyebrowType" 
+                                    x:Name="txt_eyebrowType" IsEnabled="False"
                                     IsReadOnly="True" TextChanged="statChanged" 
                                     PreviewTextInput="HexBox" 
                                     HorizontalAlignment="Left" Height="20"
@@ -3412,7 +3419,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Type" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="2"/>
                             <TextBox 
-                                    x:Name="txt_eyelashType" 
+                                    x:Name="txt_eyelashType" IsEnabled="False"
                                     IsReadOnly="True" TextChanged="statChanged" 
                                     PreviewTextInput="HexBox" 
                                     HorizontalAlignment="Left" Height="20"
@@ -3484,7 +3491,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Type" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="2"/>
                             <TextBox 
-                                    x:Name="txt_eyeshadowType" 
+                                    x:Name="txt_eyeshadowType" IsEnabled="False"
                                     IsReadOnly="True" TextChanged="statChanged" 
                                     PreviewTextInput="HexBox" 
                                     HorizontalAlignment="Left" Height="20"
@@ -3563,7 +3570,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Type" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="2"/>
                             <TextBox 
-                                    x:Name="txt_cheekType" 
+                                    x:Name="txt_cheekType" IsEnabled="False"
                                     IsReadOnly="True" TextChanged="statChanged" 
                                     PreviewTextInput="HexBox" 
                                     HorizontalAlignment="Left" Height="20"
@@ -3642,7 +3649,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Type" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0" Grid.ColumnSpan="2"/>
                             <TextBox 
-                                    x:Name="txt_lipType" 
+                                    x:Name="txt_lipType" IsEnabled="False"
                                     IsReadOnly="True" TextChanged="statChanged" 
                                     PreviewTextInput="HexBox" 
                                     HorizontalAlignment="Left" Height="20"
@@ -3721,8 +3728,9 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Type" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0"/>
                             <TextBox 
-                                    x:Name="txt_paintf1Type" 
-                                    IsReadOnly="True" LostFocus="CheckNumBox"                                    HorizontalAlignment="Left" Height="20"
+                                    x:Name="txt_paintf1Type" IsEnabled="False"
+                                    IsReadOnly="True" TextChanged="statChanged"
+                                    HorizontalAlignment="Left" Height="20"
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
                                     MouseDoubleClick="SelectAddress"
                                     GotKeyboardFocus="SelectAddress"
@@ -3876,7 +3884,8 @@
                             <Label Content="Type" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"  Grid.Column="0"/>
                             <TextBox 
                                     x:Name="txt_paintf2Type" 
-                                    IsReadOnly="True" LostFocus="CheckNumBox"                                    HorizontalAlignment="Left" Height="20"
+                                    IsReadOnly="True" TextChanged="statChanged"
+                                    HorizontalAlignment="Left" Height="20"
                                     TextWrapping="Wrap" VerticalAlignment="Top" Width="70"
                                     MouseDoubleClick="SelectAddress"
                                     GotKeyboardFocus="SelectAddress"
